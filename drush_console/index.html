@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>CTools exportables</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>Drush and Drupal console</h2>
+    <h3><a href="//bit.ly/ctools-2017">bit.ly/ctools-2017</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>About myself</h2>
+    <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+    Core mentoring coordinator https://www.drupal.org/core-mentoring <br/>
+
+    <a href="https://groups.drupal.org/node/515784">Global Sprint weekend 29.01</a>
+
+    <br/>
+    <aside class="notes">
+      <p>
+        Come on January 29 to help make Drupal better.
+        See the link on the slide
+      </p>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">What is drush</li>
+      <li class="fragment">What is Drupal console</li>
+      <li class="fragment">Similarities and Differences</li>
+      <li class="fragment">Extending</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>What is drush</h3>
+
+    <img src="media/swiss_knife.jpg" alt="Drupal army knife" />
+  </section>
+
+  <section>
+    <h3>What is console</h3>
+
+    <img src="media/drupal-console.png" alt="Drupal console" />
+  </section>
+
+
+  <section>
+  <h2>Drush launching chain</h2>
+
+  <h3>https://www.drupal.org/project/ctools</h3>
+
+  <ul>
+    <li> Finder</li>
+    <li> Wrapper (optional)</li>
+    <li> Launcher </li>
+  </ul>
+
+  <aside class="notes">
+    <li> Plugins -- tools to make it easy for modules to let other modules implement plugins from .inc files.</li>
+    <li> Exportables -- tools to make it easier for modules to have objects that live in database or live in code, such as 'default views'.</li>
+    <li> AJAX responder -- tools to make it easier for the server to handle AJAX requests and tell the client what to do with them.</li>
+    <li> Form tools -- tools to make it easier for forms to deal with AJAX.</li>
+    <li> Object caching -- tool to make it easier to edit an object across multiple page requests and cache the editing work.</li>
+    <li> Contexts -- the notion of wrapping objects in a unified wrapper and providing an API to create and accept these contexts as input.</li>
+    <li> Modal dialog -- tool to make it simple to put a form in a modal dialog.</li>
+    <li> Dependent -- a simple form widget to make form items appear and disappear based upon the selections in another item.</li>
+    <li> Content -- pluggable content types used as panes in Panels and other modules like Dashboard.</li>
+    <li> Form wizard -- an API to make multi-step forms much easier.</li>
+    <li> CSS tools -- tools to cache and sanitize CSS easily to make user-input CSS safe.</li>
+  </aside>
+
+</section>
+
+  <section>
+    <h2>References</h2>
+
+    <ul>
+      <li class="fragment"> http://drush.ws</li>
+      <li class="fragment"> https://drupalconsole.com/</li>
+    </ul>
+
+    <aside class="notes">Project page says it's an API module, what modules use it?
+
+    Views is _the_ most popular contrib module, so knowing ctools would be worth only if it was
+      the only item in the list. But it's not.
+
+
+    </aside>
+  </section>
+
+
+  <section>
+    <h3>Questions?</h3>
+  </section>
+
+
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
