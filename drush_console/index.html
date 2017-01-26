@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
 
-    <title>CTools exportables</title>
+    <title>Drush and console</title>
 
     <meta name="author" content="Valery 'valthebald' Lourie"/>
 
@@ -39,7 +39,7 @@
 <section class="slides">
 <section>
     <h2>Drush and Drupal console</h2>
-    <h3><a href="//bit.ly/ctools-2017">bit.ly/ctools-2017</a></h3>
+    <h3><a href="//bit.ly/drush_console">bit.ly/drush_console</a></h3>
 
     <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
   <br/>
@@ -60,10 +60,10 @@
 
     <br/>
     <aside class="notes">
-      <p>
+      <pre>
         Come on January 29 to help make Drupal better.
-        See the link on the slide
-      </p>
+        See the link on the slide for more information
+      </pre>
     </aside>
   </section>
 
@@ -82,48 +82,307 @@
     <h3>What is drush</h3>
 
     <img src="media/swiss_knife.jpg" alt="Drupal army knife" />
+
+    <aside class="notes">
+      <pre>
+        Created back in 2006, drush is the Swiss army knife of Drupal.
+        Mature, feature-rich tool, de-facto standard for local and remote administration
+        of Drupal sites of any level of complexity.
+
+        Comes packed with features to easily manipulate modules, themes, run database updates,
+        and many, many more commands.
+
+        Current version of drush supports Drupal 6, 7 and 8.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Drush launching chain</h2>
+
+    <ul>
+      <li class="fragment"> Finder</li>
+      <li class="fragment"> Wrapper (optional)</li>
+      <li class="fragment"> Launcher </li>
+    </ul>
+
+    <aside class="notes">
+      <pre>
+      When we say "drush", we actually mean one of 3 scripts: finder, wrapper and launcher.
+      drush finder is the script that usually resides in one of folders discoverable by the system:
+        /usr/local/bin, /usr/bin/, $HOME/bin etc
+        Recently, it is a good practice to include composer-installed binaries path to the list
+        i.e. $HOME/.composer/bin
+      You usually need only one drush finder in the system
+
+        The purpose of drush wrapper is to set project-specific options, so it belongs to the local installation. Drush wrapper (if it's found), as well as finder, launch the third component - launcher.
+
+        Launcher script builds and executes (either locally or remotely) the command (usually drush.php) with all needed parameters.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Aliases</h2>
+
+    <h3>Check your ~/.drush folder for *.aliases.drushrc.php</h3>
+
+    <h4>project.aliases.drushrc.php:</h4>
+
+    <pre>
+      <code class="php">
+      $aliases['dev'] = array(
+        'uri' => 'http://dev.project.com',
+        'root' => '/var/www/project/docroot',
+        'remote-host' => 'dev.hosting.com',
+        'remote-user' => 'my-user',
+        'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
+);
+      $aliases['prod'] = array(
+        'uri' => 'https://www.project.com',
+        'root' => '/var/www/project/docroot',
+        'remote-host' => 'prod1.hosting.com',
+        'remote-user' => 'my-user',
+        'ssh-options' => '-o PasswordAuthentication=no -i ~/.vagrant.d/insecure_private_key',
+);
+      </code>
+    </pre>
+
+    <aside class="notes">
+      <pre>
+        As mentioned on the previous slides, drush commands can be executed either locally, or remotely. Remote execution uses SSH tunneling. Each possible destination can be described as a drush alias.
+
+        Aliases is the killer feature of drush, as it inherits all the flexibility of SSH.
+        The only requirement for remote machine to be controllable with drush is working SSH connection - server itself can be real server, VPS, or docker container.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Aliases</h2>
+
+    <pre>
+      drush @project.dev ssh
+      drush @project.prod updatedb
+    </pre>
+
+    <aside class="notes">
+      <pre>
+        You can now execute commands on both development and production servers
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Drush commands</h2>
+
+    <pre>
+      <code class="php">
+/**
+ * Implementation of hook_drush_command().
+ *
+ * In this hook, you specify which commands your
+ * drush module makes available, what it does and
+ * description.
+ *
+ * Notice how this structure closely resembles how
+ * you define menu hooks.
+ *
+ * @return
+ *   An associative array describing your command(s).
+ */
+function variable_drush_command() {
+  $items['variable-get'] = array(
+    'description' => 'Get a list of some or all site variables and values.',
+    'core' => array(6,7),
+    'arguments' => array(
+      'name' => 'A string to filter the variables by. Variables whose name contains the string will be listed.',
+    ),
+    'examples' => array(
+      'drush vget' => 'List all variables and values.',
+      'drush vget user' => 'List all variables containing the string "user".',
+      'drush vget site_mail --exact' => 'Show only the value of the variable with the exact key "site_mail".',
+      'drush vget site_mail --exact --pipe' => 'Show only the variable with the exact key "site_mail" without changing the structure of the output.',
+    ),
+    'options' => array(
+      'exact' => "Only get the one variable that exactly matches the specified name.  Output will contain only the variable's value.",
+    ),
+    'outputformat' => array(
+      'default' => 'yaml',
+      'pipe-format' => 'config',
+      'variable-name' => 'variables',
+      'table-metadata' => array(
+        'format' => 'var_export',
+      ),
+    ),
+    'aliases' => array('vget'),
+  );
+
+      </code>
+    </pre>
+
+    <aside class="notes">
+      <pre>
+        Let's see what are drush commands, how they are defined and implemented.
+
+        This code is exact copy from `variable.drush.inc` file that comes with drush
+        What it does, is exposes command 'variable-get', as well as describes
+        possible usage options.
+      </pre>
+    </aside>
+  </section>
+
+
+  <section>
+    <h2>Drush commands</h2>
+
+    <pre>
+      <code class="php">
+
+/**
+ * Command callback.
+ * List your site's variables.
+ */
+function drush_variable_get() {
+  global $conf;
+  $exact = drush_get_option('exact', FALSE);
+
+  $keys = array_keys($conf);
+  if ($args = func_get_args()) {
+    $args[0] = drush_variable_name_adjust($args[0]);
+    if ($exact) {
+      $keys = in_array($args[0], $keys) ? array($args[0]) : array();
+    }
+    $keys = preg_grep("/{$args[0]}/", $keys);
+  }
+        ...
+      </code>
+    </pre>
+
+    <aside class="notes">
+      <pre>
+        This code is exact copy from `variable.drush.inc` file that comes with drush
+        What it does, is exposes command 'variable-get', as well as describes
+        possible usage options.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Add your own code</h2>
+
+    <h3>mymodule.drush.inc</h3>
+
+    <pre>
+      <code class="php">
+/**
+ * Implements of hook_drush_command().
+ */
+function mymodule_drush_command() {
+  $items['make-happy'] = array(
+    'description' => 'Make everyone or selected audience happy.',
+    'arguments' => array(
+      'who' => 'Optional filter who should be happy.',
+    ),
+    'examples' => array(
+      'drush mh' => 'Make everyone happy.',
+      'drush make-happy Russians' => 'Make only Russians happy.',
+    ),
+    'aliases' => array('mh'),
+  );
+      </code>
+    </pre>
+
+    <aside class="notes">
+      <pre>
+        The fact that drush uses hook pattern for defining new commands
+        makes it easy for Drupal developers to write new commands.
+        Hooks implementation should reside in .drush.inc file
+      </pre>
+    </aside>
+  </section>
+
+
+  <section>
+    <h2>Where can I place it?</h2>
+
+    <ul>
+      <li class="fragment">Any drupal module (previous screen)</li>
+      <li class="fragment">sites/all/drush</li>
+      <li class="fragment">~/.drush</li>
+    </ul>
+
+    <aside class="notes">
+      <pre>
+        Commands may have different requirements to be executed.
+        Some need installed Drupal site, some only working database connection,
+        some can work even if there is no Drupal code yet (drush make, version)
+      </pre>
+    </aside>
+  </section>
+
+
+  <section>
+    <h3>What's common?</h3>
+
+    <table>
+      <tr><th>Task</th><th>Drush</th><th>Console</th></tr>
+      <tr class="odd">
+        <td>Install site</td>
+        <td>drush site-install</td>
+        <td>drupal site:install</td>
+      </tr>
+      <tr class="even">
+        <td>Run database updates</td>
+        <td>drush updatedb</td>
+        <td>drupal update-execute</td>
+      </tr>
+    </table>
+
+    <aside class="notes">
+      <pre>
+        Let's now see how some of drush commands can be run with another tool - Drupal console.
+      </pre>
+    </aside>
   </section>
 
   <section>
     <h3>What is console</h3>
 
     <img src="media/drupal-console.png" alt="Drupal console" />
+    <aside class="notes">
+      <pre>
+        Console is a younger project (created in 2014), and it defines itself as the Drupal CLI
+        Tool to generate boilerplate code, interact with and debug Drupal.
+
+        Console is very close to have it's first release (current version is 1.0.0-rc15)
+
+        Console is build on top of Symfony console, and works only with Drupal 8
+      </pre>
+    </aside>
   </section>
 
-
   <section>
-  <h2>Drush launching chain</h2>
+    <h3>Why?</h3>
 
-  <h3>https://www.drupal.org/project/ctools</h3>
+    <img src="media/drupal-console.png" alt="Drupal console" />
+    <aside class="notes">
+      <pre>
+        Why do we need another tool, which doesn't even have a release,
+        and works only with Drupal 8?
 
-  <ul>
-    <li> Finder</li>
-    <li> Wrapper (optional)</li>
-    <li> Launcher </li>
-  </ul>
-
-  <aside class="notes">
-    <li> Plugins -- tools to make it easy for modules to let other modules implement plugins from .inc files.</li>
-    <li> Exportables -- tools to make it easier for modules to have objects that live in database or live in code, such as 'default views'.</li>
-    <li> AJAX responder -- tools to make it easier for the server to handle AJAX requests and tell the client what to do with them.</li>
-    <li> Form tools -- tools to make it easier for forms to deal with AJAX.</li>
-    <li> Object caching -- tool to make it easier to edit an object across multiple page requests and cache the editing work.</li>
-    <li> Contexts -- the notion of wrapping objects in a unified wrapper and providing an API to create and accept these contexts as input.</li>
-    <li> Modal dialog -- tool to make it simple to put a form in a modal dialog.</li>
-    <li> Dependent -- a simple form widget to make form items appear and disappear based upon the selections in another item.</li>
-    <li> Content -- pluggable content types used as panes in Panels and other modules like Dashboard.</li>
-    <li> Form wizard -- an API to make multi-step forms much easier.</li>
-    <li> CSS tools -- tools to cache and sanitize CSS easily to make user-input CSS safe.</li>
-  </aside>
-
-</section>
+        The answer is code generation
+      </pre>
+    </aside>
+  </section>
 
   <section>
     <h2>References</h2>
 
     <ul>
-      <li class="fragment"> http://drush.ws</li>
+      <li class="fragment"> http://www.drush.org/en/master/</li>
       <li class="fragment"> https://drupalconsole.com/</li>
+      <li class="fragment"> http://symfony.com/doc/current/components/console.html</li>
     </ul>
 
     <aside class="notes">Project page says it's an API module, what modules use it?
@@ -135,6 +394,24 @@
     </aside>
   </section>
 
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li>What is drush</li>
+      <li>What is Drupal console</li>
+      <li>Similarities and Differences</li>
+      <li>Extending</li>
+    </ul>
+    <aside class="notes">
+      <pre>
+        Both drush and console are command line tools for controlling Drupal sites.
+        drush is more versatile (works with Drupal 6-8), mature, and easily extendable.
+        Console is good for fast generation of Drupal 8 boilerplate code, including custom console commands.
+      </pre>
+    </aside>
+  </section>
 
   <section>
     <h3>Questions?</h3>
