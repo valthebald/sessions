@@ -78,6 +78,121 @@
   </section>
 
   <section>
+    <h2>How this works</h2>
+
+    <img src="media/how-xdebugger-works.png" alt="How this works" />
+    <aside class="notes">
+      <pre>
+        dbgp is a simple text protocol, which has good and bad sides.
+        Down sides:
+          performance (binary protocols are usually faster)
+          no PHP-specifics (developed as general, although no non-PHP implementations)
+          complicated connection (because security)
+        Up sides:
+          simple client-side implementation (virtually any IDE/advanced text editor support)
+          alternative implementations like dontbug
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Dontbug</h2>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/DA76z77KtY0" frameborder="0" allowfullscreen></iframe>
+    <aside class="notes">
+      dontbug supports narrower set of OS-es (focus on Ubuntu)
+    </aside>
+  </section>
+
+  <section>
+    <h2>Server side setup</h2>
+
+    <ul>
+      <li>https://xdebug.org/docs/install</li>
+      <li>preinstalled on WAMP/XAMP</li>
+      <li>brew install php56-xdebug</li>
+      <li>sudo apt-get install php5.6-xdebug</li>
+    </ul>
+
+    <aside class="notes">
+      <pre>xdebug is a PHP extension, comes pre-installed on Windows LAMP stacks (XAMP/WAMP),
+      as a package in MacOS and Linux distros
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Server side setup (2)</h2>
+
+    <pre><code class="ini">
+      cat /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+zend_extension=xdebug.so
+xdebug.default_enable = 0
+xdebug.remote_enable = 1
+xdebug.remote_handler = dbgp
+xdebug.remote_port = 9000
+xdebug.remote_autostart = 1
+xdebug.remote_connect_back = 1
+xdebug.remote_host = localhost
+xdebug.max_nesting_level = 256
+      </code>
+    </pre>
+
+    <h3 class="fragment">  https://xdebug.org/docs/all_settings </h3>
+
+    <aside class="notes">
+      <pre>
+        remote_port 9000 is default setting.
+        xdebug.remote_autostart - 2-sided sword. It will always try to connect using dbgp,
+        no matter of cookie/request settings. The only way to turn debugging on/off is in IDE.
+        when set to 0 (default), takes into account XDEBUG_SESSION, XDEBUG_SESSION_START and XDEBUG_SESSION_STOP
+        max_nesting_level
+      </pre>
+    </aside>
+  </section>
+
+
+  <section>
+    <h2>Client side setup - NetBeans</h2>
+
+    <img src="media/netbeans.png" alt="NetBeans setup" />
+
+    <aside class="notes">
+      Right click on project name > Properties > Configuration > Advanced
+      Open built-in browser by default, check this setting to use standalone one.
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client side setup - Eclipse</h2>
+
+    <img src="media/eclipse.png" alt="Eclipse setup" />
+
+    <aside class="notes">
+      Right click on project name > Properties
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client side setup - PHP Storm</h2>
+
+    <img src="media/storm1.png" alt="Turn on"/>
+
+    <img class="fragment" src="media/storm2.png" alt="Configuration" />
+
+    <aside class="notes">
+      <pre>
+      It makes one click to start listening to dbgp connections
+      OK, there is a lot more to configure, of course, but the start is really quick.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Live demo (expect some issues!)</h2>
+  </section>
+
+  <section>
     <h2>Agenda</h2>
 
     <ul>
@@ -90,6 +205,11 @@
 
   <section>
     <h3>Questions?</h3>
+
+    <ul>
+      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Multi-user+debugging+in+PhpStorm+with+Xdebug+and+DBGp+proxy">
+        JetBrains knowledge base: Multiuser debugging</a></li>
+    </ul>
   </section>
 
 
