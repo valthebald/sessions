@@ -85,7 +85,7 @@
       <pre>
         Note that there is no specifics telling what is PHP mode. It can be
         anything: FPM, CLI or Apache module.
-        dbgp is a simple text protocol, which has good and bad sides.
+        dbgp is a simple text protocol (XML based), which has good and bad sides.
         Down sides:
           performance (binary protocols are usually faster)
           no PHP-specifics (developed as general, although no non-PHP implementations)
@@ -153,6 +153,21 @@ xdebug.max_nesting_level = 256
     </aside>
   </section>
 
+  <section>
+    <h2>Network</h2>
+
+    <div style="position:relative;width: 491px;height:300px">
+    <img style="position: absolute;top:0;width: 491px;height: 161px" class="fragment" src="media/how-xdebugger-works.png" alt="Local" />
+    <img style="position: absolute;top:0;width: 491px;height: 273px" class="fragment" src="media/network.png" alt="Network" />
+    <img style="position: absolute;top:0;height:273px" class="fragment" src="media/ssh-tunnel-explained.png" alt="SSH tunnel" />
+    </div>
+    <div class="sh fragment">ssh -R 9000:localhost:9000 username@example.com</div>
+    <aside class="notes">
+      It's all good when both IDE and server run on the same machine. In practice both sides can be behind
+      firewalls. Typical firewall knows how to handle HTTP(S) traffic, but blocks non-standard ports (9000)
+      Solution - establish SSH tunnel.
+    </aside>
+  </section>
 
   <section>
     <h2>Client side setup - NetBeans</h2>
@@ -209,8 +224,13 @@ xdebug.max_nesting_level = 256
     <h3>Questions?</h3>
 
     <ul>
+      <li><a href="https://xdebug.org">https://xdebug.org</a> </li>
+      <li><a href="https://www.jetbrains.com/phpstorm/marklets/">Bookmarklet generator</a> </li>
       <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Multi-user+debugging+in+PhpStorm+with+Xdebug+and+DBGp+proxy">
         JetBrains knowledge base: Multiuser debugging</a></li>
+      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Remote+debugging+in+PhpStorm+via+SSH+tunnel">
+        JetBrains knowledge base: Remote debugging with SSH tunnel
+      </a></li>
     </ul>
   </section>
 
