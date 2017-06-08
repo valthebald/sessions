@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Git beyond basics</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>Debugging with xdebug</h2>
+    <h3><a href="//bit.ly/ffw-xdebug">bit.ly/ffw-xdebug</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>About myself</h2>
+    <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+    <ul>
+      <li>https://www.drupal.org/core-mentoring</li>
+      <li>http://drupalslack.herokuapp.com/</li>
+      <li><a href="https://www.facebook.com/bulgaria.dug/">Bulgaria DUG</a></li>
+    </ul>
+
+    <aside class="notes">
+      <pre>
+        Core mentoring coordinator
+        Drupal now has its own Slack team, see the link to get an invite
+        Meet every 3d Thursday at initLab (Rila, 6)
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">The purpose</li>
+      <li class="fragment">How this works</li>
+      <li class="fragment">Setup (server)</li>
+      <li class="fragment">Setup (IDE)</li>
+    </ul>
+
+    <aside class="notes">
+      I will even skip the slide for "the purpose" item, as it's clear to me proper debugging beats
+      `print_r()`, `var_dump`, or `dpm` calls.
+      The only reason for people still using these functions instead of real debugging, is some myths
+      on complexity of debugger installation and setup.
+      I hope to debunk these myths this session.
+      Also, mind read-only file systems used by many (especially enterprise) hosting providers.
+    </aside>
+  </section>
+
+  <section>
+    <h2>How this works</h2>
+
+    <img src="media/how-xdebugger-works.png" alt="How this works" />
+    <aside class="notes">
+      <pre>
+        xdebug extension modifies regular HTTP request/response cycle, forcing PHP process to connect
+        to IDE using DBGP protocol.
+
+        DBGP is used to control execution (step in/out/over, breakpoint at, resume etc.), as well as
+        get information about execution context, and evaluate/execute custom PHP expressions.
+
+        Note that there is no specifics telling what is PHP mode. It can be
+        anything: FPM, CLI or Apache module.
+        dbgp is a simple text protocol (XML based), which has good and bad sides.
+        Down sides:
+          performance (binary protocols are usually faster)
+          no PHP-specifics (developed as general, although no non-PHP implementations)
+          complicated connection (because security)
+        Up sides:
+          simple client-side implementation (virtually any IDE/advanced text editor support)
+          alternative implementations like dontbug
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Dontbug</h2>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/DA76z77KtY0" frameborder="0" allowfullscreen></iframe>
+    <aside class="notes">
+      dontbug supports narrower set of OS-es (focus on Ubuntu)
+    </aside>
+  </section>
+
+  <section>
+    <h2>Server side setup</h2>
+
+    <ul>
+      <li>https://xdebug.org/docs/install</li>
+      <li>preinstalled on WAMP/XAMP</li>
+      <li>brew install php56-xdebug</li>
+      <li>sudo apt-get install php5.6-xdebug</li>
+    </ul>
+
+    <aside class="notes">
+      <pre>xdebug is a PHP extension, comes pre-installed on Windows LAMP stacks (XAMP/WAMP),
+      as a package in MacOS and Linux distros
+        Last command is for the latest Ubuntu LTS using `ondrej/php` PPA repository,
+        that allows co-installable versions of PHP 5.6/7.0/7.1
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Server side setup (2)</h2>
+
+    <pre><code class="ini">
+      cat /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+zend_extension=xdebug.so
+xdebug.default_enable = 0
+xdebug.remote_enable = 1
+xdebug.remote_handler = dbgp
+xdebug.remote_port = 9000
+xdebug.remote_autostart = 1
+xdebug.remote_connect_back = 1
+xdebug.remote_host = localhost
+xdebug.max_nesting_level = 256
+      </code>
+    </pre>
+
+    <h3 class="fragment">  https://xdebug.org/docs/all_settings </h3>
+
+    <aside class="notes">
+      <pre>
+        remote_port 9000 is default setting.
+        xdebug.remote_autostart - 2-sided sword. It will always try to connect using dbgp,
+        no matter of cookie/request settings. The only way to turn debugging on/off is in IDE.
+        when set to 0 (default), takes into account XDEBUG_SESSION, XDEBUG_SESSION_START and XDEBUG_SESSION_STOP
+        max_nesting_level
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Network</h2>
+
+    <div style="position:relative;width: 491px;height:300px">
+    <img style="position: absolute;top:0;width: 491px;height: 161px" class="fragment" src="media/how-xdebugger-works.png" alt="Local" />
+    <img style="position: absolute;top:0;width: 491px;height: 273px" class="fragment" src="media/network.png" alt="Network" />
+    <img style="position: absolute;top:0;height:273px" class="fragment" src="media/ssh-tunnel-explained.png" alt="SSH tunnel" />
+    </div>
+    <div class="fragment">ssh -R 9000:localhost:9000 username@example.com</div>
+    <aside class="notes">
+      It's all good when both IDE and server run on the same machine. In practice both sides can be behind
+      firewalls. Typical firewall knows how to handle HTTP(S) traffic, but blocks non-standard ports (9000)
+      Solution - establish SSH tunnel.
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client side setup - NetBeans</h2>
+
+    <img src="media/netbeans.png" alt="NetBeans setup" />
+
+    <aside class="notes">
+      NetBeans 8.2
+      Right click on project name > Properties > Configuration > Advanced
+      Open built-in browser by default, check this setting to use standalone one.
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client side setup - Eclipse</h2>
+
+    <img src="media/eclipse.png" alt="Eclipse setup" />
+
+    <aside class="notes">
+      Eclipse 4.6.3. Same settings work in Zend Studio
+      Right click on project name > Properties
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client side setup - PHP Storm</h2>
+
+    <img src="media/storm1.png" alt="Turn on"/>
+
+    <img class="fragment" src="media/storm2.png" alt="Configuration" />
+
+    <aside class="notes">
+      <pre>
+      It makes one click to start listening to dbgp connections
+      OK, there is a lot more to configure, of course, but the start is really quick.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Live demo (expect some issues!)</h2>
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">The purpose</li>
+      <li class="fragment">How this works</li>
+      <li class="fragment">Setup (server)</li>
+      <li class="fragment">Setup (IDE)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Questions?</h3>
+
+    <ul>
+      <li><a href="https://xdebug.org">https://xdebug.org</a> </li>
+      <li><a href="https://www.jetbrains.com/phpstorm/marklets/">Bookmarklet generator</a> </li>
+      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Multi-user+debugging+in+PhpStorm+with+Xdebug+and+DBGp+proxy">
+        JetBrains knowledge base: Multiuser debugging</a></li>
+      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Remote+debugging+in+PhpStorm+via+SSH+tunnel">
+        JetBrains knowledge base: Remote debugging with SSH tunnel
+      </a></li>
+    </ul>
+  </section>
+
+
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
