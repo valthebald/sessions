@@ -38,16 +38,10 @@
 <!-- Any section element inside of this container is displayed as a slide -->
 <section class="slides">
 <section>
-    <h2>Debugging with xdebug</h2>
-    <h3><a href="//bit.ly/ffw-xdebug">bit.ly/ffw-xdebug</a></h3>
+    <h2>Git beyond basics</h2>
+    <h3><a href="//bit.ly/ffwbg-git">bit.ly/ffwbg-git</a></h3>
 
     <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
-  <br/>
-  <aside class="notes">
-    <p>
-      Slides are hosted on github, press 's' if you want to read speaker notes too.
-    </p>
-  </aside>
 </section>
 
   <section>
@@ -73,190 +67,135 @@
     <h2>Agenda</h2>
 
     <ul>
-      <li class="fragment">The purpose</li>
-      <li class="fragment">How this works</li>
-      <li class="fragment">Setup (server)</li>
-      <li class="fragment">Setup (IDE)</li>
+      <li class="fragment">History</li>
+      <li class="fragment">Features</li>
+      <li class="fragment">Working locally</li>
     </ul>
 
     <aside class="notes">
-      I will even skip the slide for "the purpose" item, as it's clear to me proper debugging beats
-      `print_r()`, `var_dump`, or `dpm` calls.
-      The only reason for people still using these functions instead of real debugging, is some myths
-      on complexity of debugger installation and setup.
-      I hope to debunk these myths this session.
-      Also, mind read-only file systems used by many (especially enterprise) hosting providers.
+      What we're going to talk about:
+      Why the git was created
+      What are design principles behind it
+      What features does it have
     </aside>
   </section>
 
   <section>
-    <h2>How this works</h2>
+    <h2>History</h2>
 
-    <img src="media/how-xdebugger-works.png" alt="How this works" />
+    <h3>Criteria</h3>
+    <ul>
+      <li class="fragment">2005</li>
+      <li class="fragment">Take Concurrent Versions System (CVS) as an example of what not to do; if in doubt, make the exact opposite decision</li>
+      <li class="fragment">Support a distributed, BitKeeper-like workflow</li>
+      <li class="fragment">Include very strong safeguards against corruption, either accidental or malicious</li>
+    </ul>
+
     <aside class="notes">
       <pre>
-        xdebug extension modifies regular HTTP request/response cycle, forcing PHP process to connect
-        to IDE using DBGP protocol.
+      Git came up as an answer to the need of Linux core development team.
+      Owner of previously used VCS - Bitkeeper, has revoked the free usa
 
-        DBGP is used to control execution (step in/out/over, breakpoint at, resume etc.), as well as
-        get information about execution context, and evaluate/execute custom PHP expressions.
+      Torvalds quipped about the name git (which means unpleasant person in British English slang): "I'm an egotistical bastard, and I name all my projects after myself. First 'Linux', now 'git'."
 
-        Note that there is no specifics telling what is PHP mode. It can be
-        anything: FPM, CLI or Apache module.
-        dbgp is a simple text protocol (XML based), which has good and bad sides.
-        Down sides:
-          performance (binary protocols are usually faster)
-          no PHP-specifics (developed as general, although no non-PHP implementations)
-          complicated connection (because security)
-        Up sides:
-          simple client-side implementation (virtually any IDE/advanced text editor support)
-          alternative implementations like dontbug
+      The man page describes Git as "the stupid content tracker".The readme file of the source code elaborates further:
+
+      The name "git" was given by Linus Torvalds when he wrote the very
+      first version. He described the tool as "the stupid content tracker"
+      and the name as (depending on your way):
+
+      - random three-letter combination that is pronounceable, and not
+      actually used by any common UNIX command.  The fact that it is a
+      mispronunciation of "get" may or may not be relevant.
+      - stupid. contemptible and despicable. simple. Take your pick from the
+      dictionary of slang.
+      - "global information tracker": you're in a good mood, and it actually
+      works for you. Angels sing, and a light suddenly fills the room.
+      - "g*dd*mn idiotic truckload of sh*t": when it breaks
       </pre>
     </aside>
   </section>
 
   <section>
-    <h2>Dontbug</h2>
-
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/DA76z77KtY0" frameborder="0" allowfullscreen></iframe>
-    <aside class="notes">
-      dontbug supports narrower set of OS-es (focus on Ubuntu)
-    </aside>
-  </section>
-
-  <section>
-    <h2>Server side setup</h2>
+    <h2>Features</h2>
 
     <ul>
-      <li>https://xdebug.org/docs/install</li>
-      <li>preinstalled on WAMP/XAMP</li>
-      <li>brew install php56-xdebug</li>
-      <li>sudo apt-get install php5.6-xdebug</li>
+      <li class="fragment">Rapid branching and merging</li>
+      <li class="fragment">Distributed development</li>
+      <li class="fragment">Efficient handling of large projects</li>
+      <li class="fragment">Cryptographic authentication</li>
     </ul>
+    <aside class="notes"><pre>
+      Many people (me included) think that the killer feature of git is how it handles branches. In a way, short-living (by default) feature branches correlate well with a modern approach of frequent, short-living applications.
+      In contrary systems to VCS-s like SVN, git is fully functional without connectivity with a central server (and doesn't require central server)
+      Performance tests done by Mozilla showed git was an order of magnitude faster than some version control systems, and fetching version history from a locally stored repository can be one hundred times faster than fetching it from the remote server.
+      The Git history is stored in such a way that the ID of a particular version (a commit in Git terms) depends upon the complete development history leading up to that commit - same principle that is in crypto currencies.
+    </pre></aside>
+  </section>
+
+  <section>
+    <h2>Working locally</h2>
+
+    <a href="https://agripongit.vincenttunru.com/">https://agripongit.vincenttunru.com/</a>
 
     <aside class="notes">
-      <pre>xdebug is a PHP extension, comes pre-installed on Windows LAMP stacks (XAMP/WAMP),
-      as a package in MacOS and Linux distros
-        Last command is for the latest Ubuntu LTS using `ondrej/php` PPA repository,
-        that allows co-installable versions of PHP 5.6/7.0/7.1
-      </pre>
+    To go beyond basics, it is necessary to show (even briefly) basics themselves.
     </aside>
   </section>
 
-  <section>
-    <h2>Server side setup (2)</h2>
-
-    <pre><code class="ini">
-      cat /etc/php/7.0/fpm/conf.d/20-xdebug.ini
-zend_extension=xdebug.so
-xdebug.default_enable = 0
-xdebug.remote_enable = 1
-xdebug.remote_handler = dbgp
-xdebug.remote_port = 9000
-xdebug.remote_autostart = 1
-xdebug.remote_connect_back = 1
-xdebug.remote_host = localhost
-xdebug.max_nesting_level = 256
-      </code>
-    </pre>
-
-    <h3 class="fragment">  https://xdebug.org/docs/all_settings </h3>
-
-    <aside class="notes">
-      <pre>
-        remote_port 9000 is default setting.
-        xdebug.remote_autostart - 2-sided sword. It will always try to connect using dbgp,
-        no matter of cookie/request settings. The only way to turn debugging on/off is in IDE.
-        when set to 0 (default), takes into account XDEBUG_SESSION, XDEBUG_SESSION_START and XDEBUG_SESSION_STOP
-        max_nesting_level
-      </pre>
-    </aside>
-  </section>
 
   <section>
-    <h2>Network</h2>
-
-    <div style="position:relative;width: 491px;height:300px">
-    <img style="position: absolute;top:0;width: 491px;height: 161px" class="fragment" src="media/how-xdebugger-works.png" alt="Local" />
-    <img style="position: absolute;top:0;width: 491px;height: 273px" class="fragment" src="media/network.png" alt="Network" />
-    <img style="position: absolute;top:0;height:273px" class="fragment" src="media/ssh-tunnel-explained.png" alt="SSH tunnel" />
-    </div>
-    <div class="fragment">ssh -R 9000:localhost:9000 username@example.com</div>
-    <aside class="notes">
-      It's all good when both IDE and server run on the same machine. In practice both sides can be behind
-      firewalls. Typical firewall knows how to handle HTTP(S) traffic, but blocks non-standard ports (9000)
-      Solution - establish SSH tunnel.
-    </aside>
-  </section>
-
-  <section>
-    <h2>Client side setup - NetBeans</h2>
-
-    <img src="media/netbeans.png" alt="NetBeans setup" />
-
-    <aside class="notes">
-      NetBeans 8.2
-      Right click on project name > Properties > Configuration > Advanced
-      Open built-in browser by default, check this setting to use standalone one.
-    </aside>
-  </section>
-
-  <section>
-    <h2>Client side setup - Eclipse</h2>
-
-    <img src="media/eclipse.png" alt="Eclipse setup" />
-
-    <aside class="notes">
-      Eclipse 4.6.3. Same settings work in Zend Studio
-      Right click on project name > Properties
-    </aside>
-  </section>
-
-  <section>
-    <h2>Client side setup - PHP Storm</h2>
-
-    <img src="media/storm1.png" alt="Turn on"/>
-
-    <img class="fragment" src="media/storm2.png" alt="Configuration" />
-
-    <aside class="notes">
-      <pre>
-      It makes one click to start listening to dbgp connections
-      OK, there is a lot more to configure, of course, but the start is really quick.
-      </pre>
-    </aside>
-  </section>
-
-  <section>
-    <h2>Live demo (expect some issues!)</h2>
-  </section>
-
-  <section>
-    <h2>Agenda</h2>
+    <h2>Concepts</h2>
 
     <ul>
-      <li class="fragment">The purpose</li>
-      <li class="fragment">How this works</li>
-      <li class="fragment">Setup (server)</li>
-      <li class="fragment">Setup (IDE)</li>
+      <li class="fragment">Working directory</li>
+      <li class="fragment">Repository</li>
+      <li class="fragment">Commit</li>
+      <li class="fragment">Stage</li>
     </ul>
+
+    <aside class="notes">
+      Working directory - is where you, well, work
+      Repository - database (not SQL!) storing the history of all change records.
+      Commit - single change record in repository, may include multiple files. Every commit is identified by its SHA1 hash.
+      Stage may be confusing for people, especially used to other VCSs. It's a plan to
+    </aside>
+  </section>
+
+  <section>
+    <h2>Concepts</h2>
+
+    <div style="background-color: white">
+    <object type="image/svg+xml" data="media/conventions.svg" width="831" height="485"></object></div>
+
+    <aside class="notes">
+      Working directory
+      Staging area. Thing that are p
+    </aside>
+  </section>
+
+  <section>
+    <h2>Remote</h2>
+
+    <a href="https://agripongit.vincenttunru.com/">https://agripongit.vincenttunru.com/</a>
+
+    <aside class="notes">
+      To go beyond basics, it is necessary to show (even briefly) basics themselves.
+    </aside>
   </section>
 
   <section>
     <h3>Questions?</h3>
 
     <ul>
-      <li><a href="https://xdebug.org">https://xdebug.org</a> </li>
-      <li><a href="https://www.jetbrains.com/phpstorm/marklets/">Bookmarklet generator</a> </li>
-      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Multi-user+debugging+in+PhpStorm+with+Xdebug+and+DBGp+proxy">
-        JetBrains knowledge base: Multiuser debugging</a></li>
-      <li><a href="https://confluence.jetbrains.com/display/PhpStorm/Remote+debugging+in+PhpStorm+via+SSH+tunnel">
-        JetBrains knowledge base: Remote debugging with SSH tunnel
-      </a></li>
+      <li>Pro git https://git-scm.com/</li>
+      <li>https://en.wikipedia.org/wiki/Git</li>
+      <li>Grip at git https://agripongit.vincenttunru.com/</li>
+      <li>https://marklodato.github.io/visual-git-guide/index-en.html</li>
     </ul>
   </section>
 
-
+</section>
 </div>
 
 <script src="../lib/js/head.min.js"></script>
