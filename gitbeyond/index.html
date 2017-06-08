@@ -77,6 +77,7 @@
       Why the git was created
       What are design principles behind it
       What features does it have
+      Examples of usage from command line, git gui and PHPStorm
     </aside>
   </section>
 
@@ -152,36 +153,146 @@
       <li class="fragment">Repository</li>
       <li class="fragment">Commit</li>
       <li class="fragment">Stage</li>
+      <li class="fragment">Branch</li>
+      <li class="fragment">Tag</li>
+      <li class="fragment">Remote</li>
     </ul>
 
-    <aside class="notes">
+    <aside class="notes"><pre>
       Working directory - is where you, well, work
       Repository - database (not SQL!) storing the history of all change records.
       Commit - single change record in repository, may include multiple files. Every commit is identified by its SHA1 hash.
-      Stage may be confusing for people, especially used to other VCSs. It's a plan to
+      Stage may be confusing for people, especially used to other VCSs. It's a plan of future commit. You may "revert" files that are in stage in 2 ways:
+      a) git checkout filename.txt - undo local changes
+      b) git reset master filename.txt - remove file from stage
+      Best definition for git branch - "Save as" for repository, yet no space wasted. Branch is a moving pointer to commit history, changing every time you perform a commit. Branch pointers are independant one from another (so you get a hugely forked structure in the end).
+      Tag - human-readable name for commit. One commit can have multiple tags (and be referenced by multiple branches)
+      Remote - remote git repository. Initialized with `git init --bare`
+    </pre>
     </aside>
   </section>
 
   <section>
-    <h2>Concepts</h2>
+    <h2>Local flow</h2>
 
     <div style="background-color: white">
     <object type="image/svg+xml" data="media/conventions.svg" width="831" height="485"></object></div>
 
     <aside class="notes">
-      Working directory
-      Staging area. Thing that are p
+      Optionally, set hooks (commit message, CS etc.) - check .git folder
     </aside>
+
   </section>
 
   <section>
     <h2>Remote</h2>
 
-    <a href="https://agripongit.vincenttunru.com/">https://agripongit.vincenttunru.com/</a>
+    <img src="media/remote.png" alt="remote">
+
 
     <aside class="notes">
-      To go beyond basics, it is necessary to show (even briefly) basics themselves.
+      Remote also can have its hooks, and as they are out of control of local developer, they are more "reliable" (i.e. no way to cheat)
     </aside>
+  </section>
+
+  <section>
+    <h2>Operations</h2>
+    <ul>
+      <li>init</li>
+      <li>remote</li>
+      <li>clone = init + remote</li>
+      <li>add</li>
+      <li>reset</li>
+      <li>checkout</li>
+      <li>commit</li>
+      <li>push</li>
+      <li>fetch</li>
+      <li>pull = fetch + merge</li>
+      <li class="fragment highlight-green grow">merge!</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Merge history</h2>
+
+    <img src="media/merge-history.png" alt="History" />
+  </section>
+
+  <section>
+    <h2>Merge vs. rebase</h2>
+
+    <img src="media/mergerebase.jpg" alt="Merge vs. rebase" />
+
+    <aside class="notes">
+      Rebase makes git history cleaner, but there are caveats.
+      Do not rebase what is used by others.
+    </aside>
+  </section>
+
+  <section>
+    <h2>Interactive rebase</h2>
+
+    <ul>
+      <li>git rebase -i HEAD~4</li>
+      <li>git rebase -i master</li>
+    </ul>
+
+    <img src="media/interactive.jpg" alt="Interactive" />
+    <aside class="notes">
+      Another use case for rebase (also related to clean history), is interactive rebasing.
+    </aside>
+  </section>
+
+  <section>
+    <h2>Fixing regression bugs</h2>
+
+    <ul>
+      <li class="fragment">git bisect start</li>
+      <li class="fragment">git bisect bad</li>
+      <li class="fragment">git bisect good &lt;reference&gt;<br/>
+      Bisecting: 6 revisions left to test after this</li>
+      <li class="fragment">...test if things are ok...</li>
+      <li class="fragment">git bisect bad</li>
+      <li class="fragment">...iterating until we're good...</li>
+      <li class="fragment">git bisect good</li>
+      <li class="fragment">git bisect reset</li>
+    </ul>
+
+    <aside class="notes">
+      Git as debugging tool
+    </aside>
+  </section>
+
+  <section>
+    <h2>Blaming</h2>
+    <img src="media/blame-storm.png" alt="Annotate" />
+    <aside class="notes">
+      git blame
+    </aside>
+  </section>
+
+  <section>
+    <h2>Resolving conflicts</h2>
+
+    <img src="media/mergehell.jpg" alt="Hell"/>
+  </section>
+
+  <section>
+    <h2>Conflict as seen in text file</h2>
+    <img src="media/conflict-gui.png" alt="Git gui" />
+  </section>
+
+  <section>
+    <h2>PHPStorm</h2>
+    <img src="media/conflict-storm.png" alt="PHP Storm" />
+  </section>
+
+  <section>
+    <h2>This is not all!</h2>
+    <ul>
+      <li>diff</li>
+      <li>cherry-pick</li>
+    </ul>
   </section>
 
   <section>
