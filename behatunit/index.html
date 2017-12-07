@@ -160,10 +160,15 @@
         Combined, the data that it specific for the project (custom code, theme + configuration)
         are less than 2% of the project.
         But... the client does not care what part of the project is written by you.
+        You need to ensure that:
+        - your custom code behaves well
+        - your custom theme displays everything well
+        - used modules are configured, do not conflict one with another and the core
+        By this simple chart you can see that integration checks are much more important than
+        correct functioning of each subsystem (also, do not forget that core has very good test coverage)
       </pre>
     </aside>
   </section>
-
 
   <section>
     <h2>What the client cares about?</h2>
@@ -175,15 +180,270 @@
     </ul>
 
     <aside class="notes">
-      <pre>Nothing in this list implies any knowledge about application structure.</pre>
+      <pre>Nothing in this list implies any knowledge about application structure.
+      No matter what issue tracking software we use (JIRA, Redmine, Github, Gitlab),
+        issue is an atom of client requirements.
+      </pre>
     </aside>
+  </section>
+
+  <section>
+    <h2>Sanity check: administrative permissions</h2>
+
+    <pre>
+      As a site editor
+      I can use administrative pages.
+
+      As anonymous user or user without site editing permissions
+      I get access denied when attempting to enter administrative pages.
+    </pre>
+
+    <pre class="fragment">
+      <img src="media/blackwhite.gif" alt="What is in the box?"/>
+    </pre>
+
+    <aside class="notes">
+      <pre>You should never, ever have regressions in this check, right?
+        How do we prevent very unwanted security hole? We have 2 choices:
+        1. Always perform the check manually on every site change (meh!)
+        2. Automate the process of unauthorized attempt and repeat it on every site change.
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Sanity check: administrative permissions</h2>
+
+    <pre>
+      As a site editor
+      I can use administrative pages.
+
+      As anonymous user or user without site editing permissions
+      I get access denied when attempting to enter administrative pages.
+    </pre>
+
+    <pre>
+      Behat solution:
+      1. Go to /admin as anonymous user
+      2. Check that application returns 'access denied'
+      3. Login as site editor
+      4. Check that application returns administration page
+    </pre>
+
+    <aside class="notes">
+      <pre>You should never, ever have regressions in this check, right?</pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Sanity check: shield protection</h2>
+
+    <pre>
+      On development server
+      As anonymous user
+      I am prompted to enter HTTP authentication credentials on development server.
+    </pre>
+
+    <pre class="fragment">
+      Behat solution:
+      1. Go to / as anonymous user
+      2. Check that application returns 'authentication required'
+    </pre>
+
+    <aside class="notes">
+      <pre>Less critical, but still very important check. To prevent accidental indexing of
+      (publicly available) development sites by search engines, and preliminary details of non-launched sites.
+        What's important in this feature, is that it should work differently in different environments!
+      </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client issue: new feature</h2>
+    <pre>
+      As a site editor or site administrator.
+      When I create a new node, I can use WYSIWYG editor for body field.
+      I can switch WYSIWYG on and off.
+    </pre>
+
+    <pre class="fragment">
+      Behat solution:
+      1. Login is site editor
+      2. Go to /node/add/page
+      3. Check that page contains WYSIWYG editor
+    </pre>
+  </section>
+
+  <section>
+    <h2>Client issue: bug</h2>
+    <pre>
+      News page is empty
+    </pre>
+
+    <pre class="fragment">
+      Behat solution:
+      1. Go to /news as anonymous user
+      2. Check that there are news.
+    </pre>
+
+    <aside class="notes"><pre>
+      Developer performs investigation, and finds that the problem is caused by the version of jQuery used
+      by WYSIWYG. News are loaded with AJAX, so developer decides to downgrade jQuery.
+      Regression! WYSIWYG stopped working!
+    </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Client issue: bug</h2>
+    <pre>
+      News page is empty again!
+    </pre>
+
+    <aside class="notes"><pre>
+      There were no change in jQuery, but news stopped working.
+      Another developer has modified web service that exposes news, to match the future launch of mobile apps.
+      News page takes news from the same service, AJAX feed now returns rows of different structure.
+    </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Lessons learned?</h2>
+
+    <img src="media/plusminus.jpeg" alt="plus and minus"/>
+
+    <aside class="notes"><pre>
+      + We see that there is an issue! Awesome! Breaking change in seemingly unrelated functionality
+      of the site was not rolled out.
+      - It took time to find the source of the problem.
+      - Relation between news page and news web service was not obvious
+      We don't know the application design, and this was the source of the problem.
+    </pre>
+    </aside>
+  </section>
+
+  <section>
+    <h2>Prevent this forever!</h2>
+
+    <pre>Behat solution:
+      1. Call web service API
+      2. Check the structure of response to see if it contains the right fields.
+    </pre>
+
+    <h3>It is possible, but...</h3>
+    <ul>
+      <li class="fragment">we need to extend Behat context</li>
+      <li class="fragment">not exactly the use case, as we <i>do know</i> the application</li>
+      <li class="fragment">slow, as it relies on actual news feed (stored in DB?)</li>
+    </ul>
+
+  </section>
+
+  <section>
+    <h2>Prevent this forever!</h2>
+
+    <pre>PHPUnit:
+      1. Instantiate news source class
+      2. Feed it with fake news
+      3. Check the response structure
+    </pre>
+
+  </section>
+
+  <section>
+    <table>
+      <tr><th>Parameter</th><th>Behat</th><th>PHPUnit</th></tr>
+      <tr class="fragment">
+        <td>Knowledge about app design</td>
+        <td>no or minimal</td>
+        <td>part of the application</td>
+      </tr>
+      <tr class="fragment">
+        <td>What is tested</td>
+        <td>whole application</td>
+        <td>single component</td>
+      </tr>
+      <tr class="fragment">
+        <td>Environment specific</td>
+        <td>yes</td>
+        <td>no</td>
+      </tr>
+      <tr class="fragment">
+        <td>Diagnostic</td>
+        <td>passes (yes/no)</td>
+        <td>reason of failure</td>
+      </tr>
+      <tr class="fragment">
+        <td>Changes application state</td>
+        <td>may be</td>
+        <td>no</td>
+      </tr>
+      <tr class="fragment">
+        <td>Speed</td>
+        <td>slow</td>
+        <td>fast</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Usage</h2>
+    <table>
+      <tr><th>Scenario</th><th>What to use</th></tr>
+      <tr>
+        <td>Sanity checks</td>
+        <td>Behat</td>
+      </tr>
+      <tr>
+        <td>Regular full checks</td>
+        <td>Both</td>
+      </tr>
+      <tr>
+        <td>Change in configuration</td>
+        <td>Behat</td>
+      </tr>
+      <tr>
+        <td>Upgrading contrib module or core</td>
+        <td>Behat</td>
+      </tr>
+      <tr>
+        <td>New custom functionality</td>
+        <td>PHPUnit</td>
+      </tr>
+      <tr>
+        <td>Change in custom code or theme</td>
+        <td>Both</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Typical setup</h2>
+    <table>
+      <tr>
+        <th>Merge/pull request</th>
+        <td>Basic behat tests</td>
+        <td>All tests for custom code and themes</td>
+      </tr>
+      <tr>
+        <th>Daily dev</th>
+        <td>All behat tests</td>
+        <td>All PHPUnit tests</td>
+      </tr>
+      <tr>
+        <th>Daily production</th>
+        <td>All idempotent behat tests</td>
+        <td>All PHPUnit tests</td>
+      </tr>
+    </table>
   </section>
 
   <section>
     <h3>Questions?</h3>
   </section>
 
-
+</section>
 </div>
 
 <script src="../lib/js/head.min.js"></script>
