@@ -352,6 +352,21 @@
   </section>
 
   <section>
+    <h2>Client issue: bug</h2>
+    <pre>
+      Changing image's focal point has no effect for anonymous users.
+      This was found during UAT of new focal point functionality in staging environment.
+      Issue cannot be reproduced in local environment.
+    </pre>
+
+    <aside class="notes"><pre>
+      Developer has found a bug in contributed module (focal point), and suggested a patch.
+      Good practice is to submit a unit test together with the patch.
+    </pre>
+    </aside>
+  </section>
+
+  <section>
     <table>
       <tr><th>Parameter</th><th>Behat</th><th>PHPUnit</th></tr>
       <tr class="fragment">
