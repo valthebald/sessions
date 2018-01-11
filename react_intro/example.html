@@ -3,6 +3,11 @@
 <head>
   <meta charset="utf8" />
   <title>Stock exchange live update</title>
+    <style>
+        .positive {color: green}
+        .negative {color: red}
+        .nochange {color: black}
+    </style>
 </head>
 <body>
  <header>
@@ -12,5 +17,9 @@
  <div id="stocks">
      <noscript>Enable JavaScript to continue</noscript>
  </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.production.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+ <script src="example.js" type="text/babel" data-preset="react"></script>
 </body>
 </html>
