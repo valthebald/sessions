@@ -4,10 +4,9 @@ const FilterForm = (props) => {
   )
 };
 
-class StockItem extends React.Component {
-  render() {
+function StockItem(props) {
       var class_name;
-      var data = this.props.data;
+      var data = props.data;
       if (data.change < 0) {
           class_name = "negative"
       }
@@ -17,12 +16,18 @@ class StockItem extends React.Component {
       else {
           class_name = "nochange"
       }
+      if (data.change != 0) {
+          class_name += " fresh"
+      }
+      class_name += " " + (props.index % 2 ? "odd" : "even");
       return (
-          <div className={class_name}>
-              {data.code} {data.name}
-          </div>
+          <tr className={class_name}>
+              <td>{data.code}</td>
+              <td>{data.name}</td>
+              <td>{Math.round(data.price*100)/100}</td>
+              <td>{Math.round(data.change*100)/100}</td>
+          </tr>
       )
-  }
 };
 
 class Stock extends React.Component {
@@ -40,27 +45,45 @@ class Stock extends React.Component {
     componentDidMount() {
         this.timerID = setInterval(
             () => this.update(),
-            10000
+            5000
         );
     }
     componentWillUnmount() {
         clearInterval(this.timerID);
     }
     update() {
-        this.setState({"shares": shares});
+        var newshares = this.state.shares;
+        // Randomly change stock price. Could be AJAX call to real stock API.
+        newshares.map(function (item) {
+            // Change probability is 30%, item price can remain still.
+            // Max single change is 1%
+            item.change = 0;
+            if (Math.random() > 0.7) {
+                item.change = (Math.random()*2 - 1) * item.price / 100;
+                item.price = item.price + item.change;
+            }
+        })
+        this.setState({"shares": newshares});
     }
     render() {
-        console.log('render');
         return (
             <div className="stocks">
                 <FilterForm/>
+                <table>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Change</th>
+                    </tr>
                 {
-                    this.state.shares.map(function (share) {
+                    this.state.shares.map(function (share, index) {
                         return (
-                            <StockItem data={share}/>
+                            <StockItem data={share} index={index}/>
                         )
                     })
                 }
+                </table>
             </div>
         )
     }
