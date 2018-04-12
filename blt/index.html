@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Acquia BLT</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>Acquia BLT</h2>
+    <h3>Extend and override defaults</h3>
+    <h3><a href="//bit.ly/ffwbg-react">bit.ly/ffwbg-react</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>About myself</h2>
+    <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+    <a href="https://www.drupal.org/core-mentoring">Core mentoring coordinator</a>  <br/>
+
+    <h3>Bulgaria DUG</h3>
+
+    <img src="media/buldug.jpg" alt="BulDUG" />
+
+    https://www.facebook.com/bulgaria.dug/
+
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li>What</li>
+      <li>Why</li>
+      <li>How</li>
+      <li>When</li>
+      <li class="fragment">Other questions/li>
+    </ul>
+    <aside class="notes"><pre>
+        What is BLT? Including a bit of history
+        Why it is chosen as default CI/CD tool for new Drupal 8 projects?
+        Who works on the project
+        Technical architecture
+        Defaults and how to override them
+        Hooks and how to use them
+        ...
+        and other questions if we have time
+    </pre></aside>
+  </section>
+
+  <section>
+      <h2>History</h2>
+
+      <ul>
+          <li class="fragment">2015 - Drupal 7 and  <a href="https://www.phing.info/"><img src="media/phing.gif" alt="Phing" /></a></li>
+          <li class="fragment">How do you reuse this???</li>
+      </ul>
+
+      <aside class="notes">
+          <pre>Back in 2015, we had a joint project with Acquia. There was string technical consultant from Acquia side,
+          and the project was hosted in Acquia cloud. The project had strict technical requirements:
+
+              - run on read-only file system
+              - have Acquia-specific folder structure of project files
+              - easy upgrade of core and contributed modules (especially security updated)
+              - keep track of applied patches
+              - synchronize configuration changes between environments (local, dev, stage, live)
+
+              Solution suggested by the consultant was Phing based.
+              Phing is Ant-inspired (anyone from the Java world here?) build tool.
+              Tasks were intensively using Drush commands.
+
+              Phing itself is
+          </pre>
+      </aside>
+  </section>
+
+  <section>
+    <h3>What is BLT</h3>
+
+    <h4>Build and Launch Tools</h4>
+
+    <ul>
+      <li>Build - gather project ar</li>
+    </ul>
+
+    <aside class="notes">
+      <pre>
+      </pre>
+    </aside>
+  </section>
+    
+  <section>
+    <h3>Questions?</h3>
+  </section>
+
+</section>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
