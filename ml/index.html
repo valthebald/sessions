@@ -183,6 +183,92 @@
     </section>
 
     <section>
+        Classification problem
+
+        <img src="media/sigmoid_formula.png" />
+        
+        <img src="media/sigmoid.png">
+    </section>
+
+    <section>
+        <h2>More features!</h2>
+
+        <img src="media/linear_vectorized.png" />
+
+        <aside class="notes">
+            Adding more features is also a way to have non-linear members in the equation,
+            i.e. add x**2, sqrt(x), ln(x) etc. as separate features.
+
+        </aside>
+    </section>
+
+    <section>
+        <h2>Less features!</h2>
+
+        <img src="media/linear_regular.png" />
+
+        <aside class="notes">
+            Let's penalize new features!
+            Better way to use/select non-linear features is to use layered structure (neural networks),
+            that can itself learn importance of certain feature combinations.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Bias vs variance</h2>
+
+        <img src="media/bias_overfitting.png" alt="Bias vs variance" />
+
+        <aside>
+            High bias (underfitting): high cost for all sets
+            High variance (overfitting): low cost for training set, cost for test set much higher
+        </aside>
+    </section>
+
+    <section>
+
+        <h2>Validating the model</h2>
+
+        <ul>
+            <li>Training set: 60%</li>
+            <li>Cross validation set: 20%</li>
+            <li>Test set: 20%</li>
+        </ul>
+
+        <ol>
+           <li>Optimize the parameters in Θ using the training set for each polynomial degree.</li>
+            <li>Find polynomial degree with least error using cross validation</li>
+            <li>Estimate generalization error using test set</li>
+        </ol>
+
+    </section>
+
+    <section>
+        <h2>Working with large data set</h2>
+
+        <h3>Stochastic gradient descent</h3>
+
+        <ul>
+            <li>Shuffle training set</li>
+            <li>Perform gradient descent for single example</li>
+            <li>Choose low &alpha;!</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Working with large data set</h2>
+
+        <h3>Online learning</h3>
+
+        <ul>
+            <li>Process training examples as they go</li>
+            <li>Adjust parameters &theta; after every example</li>
+            <li>Throw examples immediately</li>
+            <li class="fragment">Bonus: adjust to changing users preferences</li>
+        </ul>
+    </section>
+
+    <section>
       <h2>References</h2>
       <ul>
           <li><a href="https://www.coursera.org/learn/machine-learning">Machine learning on Coursera</a></li>
