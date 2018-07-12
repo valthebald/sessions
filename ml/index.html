@@ -58,7 +58,7 @@
 
     <h3>Bulgaria DUG</h3>
 
-    <img src="media/buldug.jpg" alt="BulDUG" />
+    <img src="../blt/media/buldug.jpg" alt="BulDUG" />
 
     https://www.facebook.com/bulgaria.dug/
 
@@ -87,8 +87,10 @@
       Arthur Samuel:
       <blockquote>Field of study that gives computers the ability to learn without being explicitly programmed</blockquote>
 
+      <div class="fragment">
       Tom Mitchell:
       <blockquote>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</blockquote>
+      </div>
   </section>
 
 
@@ -115,15 +117,69 @@
 
         <ul>
             <li class="fragment">Clustering</li>
+            <li class="fragment">Dimension reduction</li>
             <li class="fragment">Anomaly detection</li>
         </ul>
 
         <aside class="notes"><pre>
-            Regression - predicted values are within continious range, i.e.
-            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+            Clustering - group unlabeled data into clusters of values
 
-            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
         </pre></aside>
+    </section>
+
+    <section>
+        <h2>Learning flow</h2>
+
+        <img src="media/training_flow.png" alt="Training flow" />
+
+        <aside class="notes">Hypothesis and cost functions</aside>
+    </section>
+
+    <section>
+        <h2>Linear regression</h2>
+
+        <img src="media/house_prices.png" alt="Housing prices" />
+
+        <h3>Hypothesis</h3>
+
+        h = &theta;<sub>0</sub> + &theta;<sub>1</sub> * X
+    </section>
+
+    <section>
+        <h2>Linear regression</h2>
+
+        <h3>Hypothesis</h3>
+
+        h = &theta;<sub><small>0</small></sub> + &theta;<sub><small>1</small></sub> * X
+
+        <h3>Cost function</h3>
+
+        <img src="media/cost_linear.png" alt="Cost function" />
+
+        <aside class="notes">
+            m - number of samples in the training set.
+        </aside>
+    </section>
+
+
+    <section>
+        <h2>Gradient descent</h2>
+
+        <img src="media/descent.png" /><br/>
+    </section>
+
+    <section>
+        <h2>Gradient descent</h2>
+
+        <img class="fragment" src="media/descent_formula.png" alt="Cost function" /><br/>
+
+        <h4 class="fragment">Repeat until convergence</h4>
+
+        <img class="fragment" src="media/derivative_linear.png" />
+
+        <aside class="notes">
+            m - number of samples in the training set.
+        </aside>
     </section>
 
     <section>
