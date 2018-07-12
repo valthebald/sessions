@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Machine learning and content management</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>Machine learning and content management</h2>
+    <h3><a href="//bit.ly/ffwbg-ml">bit.ly/ffwbg-ml</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>About myself</h2>
+    <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+    <a href="https://www.drupal.org/core-mentoring">Core mentoring coordinator</a>  <br/>
+
+    <h3>Bulgaria DUG</h3>
+
+    <img src="media/buldug.jpg" alt="BulDUG" />
+
+    https://www.facebook.com/bulgaria.dug/
+
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">What is machine learning</li>
+      <li class="fragment">Task types</li>
+      <li class="fragment">Neural networks</li>
+      <li class="fragment">Stochastic gradient descent</li>
+      <li class="fragment">Online learning</li>
+      <li class="fragment">References</li>
+    </ul>
+    <aside class="notes"><pre>
+        This short introduction is inspired by the excellent coure of Stanford University,
+        available online (link will be in the references section).
+    </pre></aside>
+  </section>
+
+  <section>
+      <h2>What is machine learning</h2>
+
+      Arthur Samuel:
+      <blockquote>Field of study that gives computers the ability to learn without being explicitly programmed</blockquote>
+
+      Tom Mitchell:
+      <blockquote>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</blockquote>
+  </section>
+
+
+    <section>
+        <h2>Supervised learning</h2>
+
+        <ul>
+            <li class="fragment">Regression</li>
+            <li class="fragment">Classification</li>
+        </ul>
+
+        <aside class="notes"><pre>
+            We have "labelled" training set, i.e. for every sample we know advance some correct value.
+
+            Regression - predicted values are within continious range, i.e.
+            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+
+            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
+        </pre></aside>
+    </section>
+
+    <section>
+        <h2>Unsupervised learning</h2>
+
+        <ul>
+            <li class="fragment">Regression</li>
+            <li class="fragment">Classification</li>
+        </ul>
+
+        <aside class="notes"><pre>
+            Regression - predicted values are within continious range, i.e.
+            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+
+            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
+        </pre></aside>
+    </section>
+
+    <section>
+      <h2>References</h2>
+      <ul>
+          <li><a href="https://www.coursera.org/learn/machine-learning">Machine learning on Coursera</a></li>
+          <li><a href="https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms">Quora on difference supervised vs non-supervised</a> </li>
+      </ul>
+  </section>
+
+  <section>
+    <h3>Questions?</h3>
+  </section>
+
+</section>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
