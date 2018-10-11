@@ -65,15 +65,42 @@
     </ul>
   </section>
 
+    <section>
+        <h2>Default setup</h2>
+        <ul>
+            <li>Internal page cache</li>
+            <li>Internal dynamic page cache</li>
+            <li class="fragment highlight-red">Beware: devel module</li>
+            <li class="fragment highlight-red">Beware: development.services.yml </li>
+        </ul>
+        <aside class="notes"><pre>
+            We will use 2 core modules that are enabled by default in Drupal 8 core: internal page cache and internal dynamic page cache.
+            Although default caching settings of Drupal 8 core are performance-oriented, BLT tries to autodetect local environment,
+            and disable some performance-related features like render cache, enable twig debugging and so on.
+            Default services.yml coming with Drupal core is in general good source of information about what parameters of core can be tweaked.
+    </pre></aside>
+
+    </section>
+
   <section>
       <h2>Request life cycle</h2>
       <img src="media/request.png" alt="Request" />
       <aside class="notes"><pre>
+          Let's skip at the moment everything that happens before request arrives to Http kernel - we will return to this soon.
           DrupalKernel gets Request object as a parameter
           From request, kernel finds appropriate controller
           Controller can return either response object, or renderable array.
+          Http kernel always returns response object - that can be cached by middleware
     </pre></aside>
   </section>
+
+    <section>
+        <h2>Cache types</h2>
+        <ul>
+            <li>Response cache</li>
+            <li>Render cache</li>
+        </ul>
+    </section>
 
     <section>
         <img src="media/user_controller_response.png" alt="User page response" />
@@ -94,39 +121,25 @@
             <li>Tags: dependencies on data managed by Drupal, like entities & configuration</li>
             <li>Contexts: variations, i.e. time zone, language preferences, user agent</li>
             <li>max-age</li>
+        </ul>
+
+        <aside class="notes"><pre>
+            For complex pages that contain elements that are built and rendered independently, caching metadata is bubbled,
+            i.e. is aggregated from the low-level items to top-level, so fully rendered page has information about all tags and contexts of its components
+        </pre></aside>
     </section>
 
     <section>
-      <h2>Cache types</h2>
-
-      <ul>
-          <li>Response cache</li>
-          <li>Fragment (render) caches</li>
-      </ul>
-  </section>
+        <h2>Request revisited</h2>
+        <img src="media/request_middleware.png" alt="Request" />
+    </section>
 
     <section>
-        <h2>        - Caceh types in Drupal: page cache and render cache.
+        <h2>Who said this can happen only inside Drupal? </h2>
 
-            -
-
-            - Default cache settings and how to change them
-
-            - using external caches -
-
-            - why we choose varnish
-
-            - Processing of request by Varnish. Main built-in functions. Types of response: pipe, pass, synth
-
-            - Processing of request by Drupal. Cacheable and non-cacheable responses. Render cache.
-
-
-            - Invalidating cache items. Communication between Drupal and Varnish. What modules are needed and how to configure them.
-
-            - Typical setup: links to vcl, enabled modules etc.
-            - (if we have time)  Beyond basics: caching for authenticated users. Dynamic page cache, BigPipe and ESI. Lazy builders.
-            - Q&A + useful links
-        </h2>
+        <aside class="notes"><pre>
+            Here I'm passing presenter role to Rumen
+        </pre></aside>
     </section>
 
     <section>
