@@ -54,250 +54,85 @@
     <h2>Agenda</h2>
 
     <ul>
-      <li class="fragment">What is machine learning</li>
-      <li class="fragment">Task types</li>
-      <li class="fragment">Neural networks</li>
-      <li class="fragment">Stochastic gradient descent</li>
-      <li class="fragment">Online learning</li>
-      <li class="fragment">References</li>
+      <li class="fragment highlight-green">Cache types</li>
+        <li class="fragment highlight-green">Metadata</li>
+      <li class="fragment highlight-green">Default settings and how to change them</li>
+      <li class="fragment highlight-green">Using external caches</li>
+      <li class="fragment highlight-green">Why Varnish?</li>
+      <li>(if we have time) Beyond basics: caching for authenticated users</li>
+      <li class="fragment highlight-green">Q&A</li>
+
     </ul>
-    <aside class="notes"><pre>
-        This short introduction is inspired by the excellent coure of Stanford University,
-        available online (link will be in the references section).
+  </section>
+
+  <section>
+      <h2>Request life cycle</h2>
+      <img src="media/request.png" alt="Request" />
+      <aside class="notes"><pre>
+          DrupalKernel gets Request object as a parameter
+          From request, kernel finds appropriate controller
+          Controller can return either response object, or renderable array.
     </pre></aside>
   </section>
 
     <section>
-        <h2>The task: CTR</h2>
-
-        <h3>Variables</h3>
-        <ul>
-            <li>Visitor demographics (country/language)</li>
-            <li>Time (weekday/hour)</li>
-            <li>Previous history of actions</li>
-            <li>Current page data (taxonomy)</li>
-            <li>Update date of the content</li>
-        </ul>
+        <img src="media/user_controller_response.png" alt="User page response" />
+        <aside class="notes"><pre>
+          As an example, here's the result of controller responsible for the user page `/user/1`
+          Benefit of returning generic array is to delegate kernel decision on the final format of response
+            It can be regular HTML page, or record in JSON API response, or CSV export or some other exotic format.
+            User page (in our case) is quite basic in that it does not contain any elements except user entity
+            You can easily imagine more complex cases, like news listing page, or front page, or node page.
+            What's interesting in even the basic response data, is it's cache metadata
+    </pre></aside>
     </section>
 
     <section>
-      <h2>What is machine learning</h2>
+        <h2>Cache metadata</h2>
 
-      Arthur Samuel:
-      <blockquote>Field of study that gives computers the ability to learn without being explicitly programmed</blockquote>
+        <ul>
+            <li>Tags: dependencies on data managed by Drupal, like entities & configuration</li>
+            <li>Contexts: variations, i.e. time zone, language preferences, user agent</li>
+            <li>max-age</li>
+    </section>
 
-      <div class="fragment">
-      Tom Mitchell:
-      <blockquote>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</blockquote>
-      </div>
+    <section>
+      <h2>Cache types</h2>
+
+      <ul>
+          <li>Response cache</li>
+          <li>Fragment (render) caches</li>
+      </ul>
   </section>
 
-
     <section>
-        <h2>Supervised learning</h2>
+        <h2>        - Caceh types in Drupal: page cache and render cache.
 
-        <ul>
-            <li class="fragment">Regression</li>
-            <li class="fragment">Classification</li>
-        </ul>
+            -
 
-        <aside class="notes"><pre>
-            We have "labelled" training set, i.e. for every sample we know advance some correct value.
+            - Default cache settings and how to change them
 
-            Regression - predicted values are within continious range, i.e.
-            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+            - using external caches -
 
-            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
-        </pre></aside>
-    </section>
+            - why we choose varnish
 
-    <section>
-        <h2>Unsupervised learning</h2>
+            - Processing of request by Varnish. Main built-in functions. Types of response: pipe, pass, synth
 
-        <ul>
-            <li class="fragment">Clustering</li>
-            <li class="fragment">Dimension reduction</li>
-            <li class="fragment">Anomaly detection</li>
-        </ul>
-
-        <aside class="notes"><pre>
-            Clustering - group unlabeled data into clusters of values
-
-        </pre></aside>
-    </section>
-
-    <section>
-        <h2>Learning flow</h2>
-
-        <img src="media/training_flow.png" alt="Training flow" />
-
-        <aside class="notes">Hypothesis and cost functions</aside>
-    </section>
-
-    <section>
-        <h2>Linear regression</h2>
-
-        <img src="media/house_prices.png" alt="Housing prices" />
-
-        <h3>Hypothesis</h3>
-
-        h = &theta;<sub>0</sub> + &theta;<sub>1</sub> * X
-    </section>
-
-    <section>
-        <h2>Linear regression</h2>
-
-        <h3>Hypothesis</h3>
-
-        h = &theta;<sub><small>0</small></sub> + &theta;<sub><small>1</small></sub> * X
-
-        <h3>Cost function</h3>
-
-        <img src="media/cost_linear.png" alt="Cost function" />
-
-        <aside class="notes">
-            m - number of samples in the training set.
-        </aside>
-    </section>
+            - Processing of request by Drupal. Cacheable and non-cacheable responses. Render cache.
 
 
-    <section>
-        <h2>Gradient descent</h2>
+            - Invalidating cache items. Communication between Drupal and Varnish. What modules are needed and how to configure them.
 
-        <img src="media/descent.png" /><br/>
-    </section>
-
-    <section>
-        <h2>Gradient descent</h2>
-
-        <img class="fragment" src="media/descent_formula.png" alt="Cost function" /><br/>
-
-        <h4 class="fragment">Repeat until convergence</h4>
-
-        <img class="fragment" src="media/derivative_linear.png" />
-
-        <aside class="notes">
-            m - number of samples in the training set.
-        </aside>
-    </section>
-
-    <section>
-        <h2>Classification problem</h2>
-
-        <img src="media/sigmoid_formula.png" />
-        
-        <img src="media/sigmoid.png">
-    </section>
-
-    <section>
-        <h2>More features!</h2>
-
-        <img src="media/linear_vectorized.png" />
-
-        <aside class="notes">
-            Adding more features is also a way to have non-linear members in the equation,
-            i.e. add x**2, sqrt(x), ln(x) etc. as separate features.
-
-        </aside>
-    </section>
-
-    <section>
-        <h2>Less features!</h2>
-
-        <img src="media/linear_regular.png" />
-
-        <aside class="notes">
-            Let's penalize new features!
-            Better way to use/select non-linear features is to use layered structure (neural networks),
-            that can itself learn importance of certain feature combinations.
-        </aside>
-    </section>
-
-    <section>
-        <h2>Bias vs variance</h2>
-
-        <img src="media/bias_overfitting.png" alt="Bias vs variance" />
-
-        <aside>
-            High bias (underfitting): high cost for all sets
-            High variance (overfitting): low cost for training set, cost for test set much higher
-        </aside>
-    </section>
-
-    <section>
-
-        <h2>Validating the model</h2>
-
-        <ul>
-            <li>Training set: 60%</li>
-            <li>Cross validation set: 20%</li>
-            <li>Test set: 20%</li>
-        </ul>
-
-        <ol>
-           <li>Optimize the parameters in Θ using the training set for each polynomial degree.</li>
-            <li>Find polynomial degree with least error using cross validation</li>
-            <li>Estimate generalization error using test set</li>
-        </ol>
-
-    </section>
-
-    <section>
-        <h2>Working with large data set</h2>
-
-        <h3>Stochastic gradient descent</h3>
-
-        <ul>
-            <li>Shuffle training set</li>
-            <li>Perform gradient descent for single example</li>
-            <li>Choose low &alpha;!</li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>Working with large data set</h2>
-
-        <h3>Online learning</h3>
-
-        <ul>
-            <li>Process training examples as they go</li>
-            <li>Adjust parameters &theta; after every example</li>
-            <li>Throw examples immediately</li>
-            <li class="fragment">Bonus: adjust to changing users preferences</li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>The task: what's missing?</h2>
-
-        <h3>Variables</h3>
-        <ul>
-            <li>Visitor demographics (country/language)</li>
-            <li>Time (weekday/hour)</li>
-            <li>Previous history of actions</li>
-            <li>Current page data (taxonomy)</li>
-            <li>Update date of the content</li>
-        </ul>
-
-        <h3>Split test and feedback</h3>
-    </section>
-
-    <section>
-        <h2>The task: what's missing?</h2>
-
-        <h3>Variables</h3>
-        <ul>
-            <li>Visitor demographics (country/language)</li>
-            <li>Time (weekday/hour)</li>
-            <li>Previous history of actions</li>
-            <li>Current page data (taxonomy)</li>
-            <li>Update date of the content</li>
-        </ul>
+            - Typical setup: links to vcl, enabled modules etc.
+            - (if we have time)  Beyond basics: caching for authenticated users. Dynamic page cache, BigPipe and ESI. Lazy builders.
+            - Q&A + useful links
+        </h2>
     </section>
 
     <section>
       <h2>Questions?</h2>
       <ul>
+          <li><a href="https://www.drupal.org/docs/8/api/cache-api/cache-api">Cache guide on drupal.org</a></li>
           <li><a href="https://drupalize.me/series/user-guide/prevent-chapter">Caching-related videos on Drupalize.me</a></li>
       </ul>
   </section>
