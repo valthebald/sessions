@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Caching in- and outside of Drupal 8</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>Caching in- and outside of Drupal 8</h2>
+    <h3><a href="//bit.ly/ffwbg-cache">bit.ly/ffwbg-cache</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">What is machine learning</li>
+      <li class="fragment">Task types</li>
+      <li class="fragment">Neural networks</li>
+      <li class="fragment">Stochastic gradient descent</li>
+      <li class="fragment">Online learning</li>
+      <li class="fragment">References</li>
+    </ul>
+    <aside class="notes"><pre>
+        This short introduction is inspired by the excellent coure of Stanford University,
+        available online (link will be in the references section).
+    </pre></aside>
+  </section>
+
+    <section>
+        <h2>The task: CTR</h2>
+
+        <h3>Variables</h3>
+        <ul>
+            <li>Visitor demographics (country/language)</li>
+            <li>Time (weekday/hour)</li>
+            <li>Previous history of actions</li>
+            <li>Current page data (taxonomy)</li>
+            <li>Update date of the content</li>
+        </ul>
+    </section>
+
+    <section>
+      <h2>What is machine learning</h2>
+
+      Arthur Samuel:
+      <blockquote>Field of study that gives computers the ability to learn without being explicitly programmed</blockquote>
+
+      <div class="fragment">
+      Tom Mitchell:
+      <blockquote>A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</blockquote>
+      </div>
+  </section>
+
+
+    <section>
+        <h2>Supervised learning</h2>
+
+        <ul>
+            <li class="fragment">Regression</li>
+            <li class="fragment">Classification</li>
+        </ul>
+
+        <aside class="notes"><pre>
+            We have "labelled" training set, i.e. for every sample we know advance some correct value.
+
+            Regression - predicted values are within continious range, i.e.
+            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+
+            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
+        </pre></aside>
+    </section>
+
+    <section>
+        <h2>Unsupervised learning</h2>
+
+        <ul>
+            <li class="fragment">Clustering</li>
+            <li class="fragment">Dimension reduction</li>
+            <li class="fragment">Anomaly detection</li>
+        </ul>
+
+        <aside class="notes"><pre>
+            Clustering - group unlabeled data into clusters of values
+
+        </pre></aside>
+    </section>
+
+    <section>
+        <h2>Learning flow</h2>
+
+        <img src="media/training_flow.png" alt="Training flow" />
+
+        <aside class="notes">Hypothesis and cost functions</aside>
+    </section>
+
+    <section>
+        <h2>Linear regression</h2>
+
+        <img src="media/house_prices.png" alt="Housing prices" />
+
+        <h3>Hypothesis</h3>
+
+        h = &theta;<sub>0</sub> + &theta;<sub>1</sub> * X
+    </section>
+
+    <section>
+        <h2>Linear regression</h2>
+
+        <h3>Hypothesis</h3>
+
+        h = &theta;<sub><small>0</small></sub> + &theta;<sub><small>1</small></sub> * X
+
+        <h3>Cost function</h3>
+
+        <img src="media/cost_linear.png" alt="Cost function" />
+
+        <aside class="notes">
+            m - number of samples in the training set.
+        </aside>
+    </section>
+
+
+    <section>
+        <h2>Gradient descent</h2>
+
+        <img src="media/descent.png" /><br/>
+    </section>
+
+    <section>
+        <h2>Gradient descent</h2>
+
+        <img class="fragment" src="media/descent_formula.png" alt="Cost function" /><br/>
+
+        <h4 class="fragment">Repeat until convergence</h4>
+
+        <img class="fragment" src="media/derivative_linear.png" />
+
+        <aside class="notes">
+            m - number of samples in the training set.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Classification problem</h2>
+
+        <img src="media/sigmoid_formula.png" />
+        
+        <img src="media/sigmoid.png">
+    </section>
+
+    <section>
+        <h2>More features!</h2>
+
+        <img src="media/linear_vectorized.png" />
+
+        <aside class="notes">
+            Adding more features is also a way to have non-linear members in the equation,
+            i.e. add x**2, sqrt(x), ln(x) etc. as separate features.
+
+        </aside>
+    </section>
+
+    <section>
+        <h2>Less features!</h2>
+
+        <img src="media/linear_regular.png" />
+
+        <aside class="notes">
+            Let's penalize new features!
+            Better way to use/select non-linear features is to use layered structure (neural networks),
+            that can itself learn importance of certain feature combinations.
+        </aside>
+    </section>
+
+    <section>
+        <h2>Bias vs variance</h2>
+
+        <img src="media/bias_overfitting.png" alt="Bias vs variance" />
+
+        <aside>
+            High bias (underfitting): high cost for all sets
+            High variance (overfitting): low cost for training set, cost for test set much higher
+        </aside>
+    </section>
+
+    <section>
+
+        <h2>Validating the model</h2>
+
+        <ul>
+            <li>Training set: 60%</li>
+            <li>Cross validation set: 20%</li>
+            <li>Test set: 20%</li>
+        </ul>
+
+        <ol>
+           <li>Optimize the parameters in Θ using the training set for each polynomial degree.</li>
+            <li>Find polynomial degree with least error using cross validation</li>
+            <li>Estimate generalization error using test set</li>
+        </ol>
+
+    </section>
+
+    <section>
+        <h2>Working with large data set</h2>
+
+        <h3>Stochastic gradient descent</h3>
+
+        <ul>
+            <li>Shuffle training set</li>
+            <li>Perform gradient descent for single example</li>
+            <li>Choose low &alpha;!</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Working with large data set</h2>
+
+        <h3>Online learning</h3>
+
+        <ul>
+            <li>Process training examples as they go</li>
+            <li>Adjust parameters &theta; after every example</li>
+            <li>Throw examples immediately</li>
+            <li class="fragment">Bonus: adjust to changing users preferences</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>The task: what's missing?</h2>
+
+        <h3>Variables</h3>
+        <ul>
+            <li>Visitor demographics (country/language)</li>
+            <li>Time (weekday/hour)</li>
+            <li>Previous history of actions</li>
+            <li>Current page data (taxonomy)</li>
+            <li>Update date of the content</li>
+        </ul>
+
+        <h3>Split test and feedback</h3>
+    </section>
+
+    <section>
+        <h2>The task: what's missing?</h2>
+
+        <h3>Variables</h3>
+        <ul>
+            <li>Visitor demographics (country/language)</li>
+            <li>Time (weekday/hour)</li>
+            <li>Previous history of actions</li>
+            <li>Current page data (taxonomy)</li>
+            <li>Update date of the content</li>
+        </ul>
+    </section>
+
+    <section>
+      <h2>Questions?</h2>
+      <ul>
+          <li><a href="https://drupalize.me/series/user-guide/prevent-chapter">Caching-related videos on Drupalize.me</a></li>
+      </ul>
+  </section>
+
+</section>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
