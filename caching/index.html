@@ -143,6 +143,23 @@
     </section>
 
     <section>
+        <h2>Varnish + Drupal setup</h2>
+        <h3>Modules</h3>
+        <ul>
+            <li><a href="https://www.drupal.org/project/purge">Purge</a> set of modules </li>
+            <li><a href="https://www.drupal.org/project/varnish_purge">Varnish purge</a> </li>
+        </ul>
+        <h3>Steps</h3>
+        <ul>
+            <li>Disable Internal page cache</li>
+            <li>Enable Purge, Purge UI, Purge Drush, Purge tokens, Core tags queuer, Cron processor</li>
+            <li>Enable Varnish Purger and Varnish Purger tags</li>
+            <li>Configure at admin/config/development/performance/purge</li>
+        </ul>
+        <aside class="notes"><pre></pre></aside>
+    </section>
+
+    <section>
       <h2>Questions?</h2>
         <h3><a href="//bit.ly/ffwbg-cache">bit.ly/ffwbg-cache</a></h3>
       <ul>
