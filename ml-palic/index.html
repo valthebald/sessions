@@ -296,13 +296,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             </aside>
         </section>
 
-
-        <section class="section">
-            <h1>Gradient descent</h1>
-
-            <img class="no-frame" src="media/descent.png" /><br/>
-        </section>
-
         <section class="section">
             <h1>Gradient descent</h1>
 
@@ -310,7 +303,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             <aside class="notes">
                 To find the best values of theta, we start from random values (typically from zeros, but can be any starting point),
                 perform small change of theta, and then change them towards  the direction of smaller error values
-
             </aside>
         </section>
 
@@ -350,60 +342,41 @@ In other words, let's jump to the land of unknown, and start from the basics - w
         </section>
 
         <section class="slide">
-            <h1>More features, more labels!</h1>
-            <h2>Hypothesis</h2>
+            <h1>Linear regression</h1>
+            <h2>Experimental data</h2>
+
+            <img class="no-frame" src="media/ctr-position.png" alt="CTR dependent on position" />
+
+            <div>You can't bring the cost to 0!</div>
+
+            <aside class="notes">
+                You can see that there are points that have the same feature value, but different label.
+                That means one dimension, one feature linear function is not a good choice.
+            </aside>
+
+        </section>
+
+        <section class="slide">
+            <h1>More features</h1>
 
             \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 \]
 
             <div class="fragment"> \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 + \mathbf{&theta;}_2 \times {X}_2\] </div>
             <div class="fragment"> \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 + ... \mathbf{&theta;}_N \times {X}_N\] </div>
-
-            <div class="fragment">
-                \[
-                h = \begin{bmatrix}
-                \mathbf{&theta;}_0 \mathbf{&theta;}_1 .. \mathbf{&theta;}_N
-                \end{bmatrix} \times
-                \begin{bmatrix}
-                1 \\
-                \mathbf{X}_1 \\
-                .. \\
-                \mathbf{X}_N
-                \end{bmatrix} \]
-            </div>
+            <div class="fragment"> Let's agree that \[ {X}_0 = 0 \]</div>
+            <div class="fragment"> \[h = \mathbf{&theta;}_0 \times {X}_0 + \mathbf{&theta;}_1 \times {X}_1 +  \mathbf{&theta;}_2 \times {X}_2 + ... \mathbf{&theta;}_N \times {X}_N\] </div>
+            <div class="fragment"> \[h = \mathbf{&theta;} \times {X}\] </div>
 
             <aside class="notes">
                 Adding new features is also a way to have non-linear derivatives of original features, but still use linear regression.
-            </aside>
-        </section>
+                In our example my guess would be that logarithm function is better approximation than line.
+                But we still can use linear regression, if we add a new feature theta_2, that will be equal to logarithm of theta_1
 
-        <section class="slide">
-            <h1>More features, more labels!</h1>
-            <h2>Hypothesis</h2>
-
-            <div>
-                \[
-                h = \begin{bmatrix}
-                \mathbf{&theta;}_{10} \mathbf{&theta;}_{11} .. \mathbf{&theta;}_{1N} \\
-                \mathbf{&theta;}_{20} \mathbf{&theta;}_{21} .. \mathbf{&theta;}_{2N} \\
-                .. \\
-                \mathbf{&theta;}_{L0} \mathbf{&theta;}_{L1} .. \mathbf{&theta;}_{LN}
-
-                \end{bmatrix} \times
-                \begin{bmatrix}
-                1 \\
-                \mathbf{X}_1 \\
-                .. \\
-                \mathbf{X}_N
-                \end{bmatrix} \]
-            </div>
-
-            <div class="fragment">
-                \[ h = &theta; \times X \]
-                \[ \frac{\partial}{\partial\mathbf{&theta;}_j} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \times X^{(i,j)}\]
-            </div>
-
-            <aside class="notes">
-                Adding new features is also a way to have non-linear derivatives of original features, but still use linear regression.
+                There are also naturally other features, like price, country, brand, date of release (freshness) etc.
+                Country and brand are themselves not single, but multiple features:
+                If you're not Donald Trump, you're probably won't tell that US is no.1, UK is no.2 etc. - but even then, how can you assign values
+                to other countries? Correct way is to have multiple features, each one having value 0 or 1 - so if we sell to 50 countries,
+                we should define 50 binary features.
             </aside>
         </section>
 
@@ -420,17 +393,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
         </section>
 
         <section>
-            <h2>Bias vs variance</h2>
-
-            <img class="no-frame" src="media/bias_overfitting.png" alt="Bias vs variance" />
-
-            <aside>
-                High bias (underfitting): high cost for all sets
-                High variance (overfitting): low cost for training set, cost for test set much higher
-            </aside>
-        </section>
-
-        <section>
 
             <h2>Validating the model</h2>
 
@@ -440,11 +402,14 @@ In other words, let's jump to the land of unknown, and start from the basics - w
                 <li>Test set: 20%</li>
             </ul>
 
+            <aside class="notes">
+
             <ol>
                 <li>Optimize the parameters in Θ using the training set for each polynomial degree.</li>
                 <li>Find polynomial degree with least error using cross validation</li>
                 <li>Estimate generalization error using test set</li>
             </ol>
+            </aside>
 
         </section>
 
@@ -460,10 +425,8 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             </ul>
         </section>
 
-        <section>&theta;
-            <h2>Working with large data set</h2>
-
-            <h3>Online learning</h3>
+        <section>
+            <h2>Online learning</h2>
 
             <ul>
                 <li>Process training examples as they go</li>
@@ -471,11 +434,14 @@ In other words, let's jump to the land of unknown, and start from the basics - w
                 <li>Throw examples immediately</li>
                 <li class="fragment">Bonus: adjust to changing users preferences</li>
             </ul>
+            <aside class="notes"><pre>
+                Online learning is the process when you don't have static experimental data,
+                but instead you constantly get a stream of new items.
+                This is very similar to stochastic gradient descent process that we have seen on the previous slide.
+            </pre></aside>
         </section>
 
         <section class="slide">
-            <h1>The task: what's missing?</h1>
-
             <h2>Features</h2>
             <ul>
                 <li>Visitor demographics (country/language)</li>
@@ -489,8 +455,7 @@ In other words, let's jump to the land of unknown, and start from the basics - w
         </section>
 
         <section class="slide">
-            <h1>Questions</h1>
-            <h2>Resources</h2>
+            <h2>Q & A</h2>
             <ul>
                 <li><a href="https://www.drupaleurope.org/session/content-management-ai-driven-world">Drupal Europe session (with video recording)</a></li>
                 <li><a href="https://www.coursera.org/learn/machine-learning">Machine learning on Coursera</a></li>
@@ -502,16 +467,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             </ul>
         </section>
 
-        <section class="section">
-            <h1>Contribution day on Friday!</h1>
-            <h2> </h2>
-
-            <ul>
-                <li>First-time sprinters workshop</li>
-                <li>Mentored contribution</li>
-                <li>Contribution by topic</li>
-            </ul>
-        </section>
 
     </section>
 </div>
