@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Machine learning and content management</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <section class="slides">
+        <!-- Session title -->
+        <section class="title">
+            <h1>Machine learning and content management</h1>
+            <h2><a href="//bit.ly/ml-palic">bit.ly/ml-palic</a></h2>
+
+            <aside class="notes"><pre>
+				Slides are hosted on github, press 's' if you want to read speaker notes too.
+				All links mentioned in the presentation will be posted in the last slide
+                This talk is largely based on my Drupal Europe presentation
+                Main feedback that I got is that the session contained too much of math.
+                I cannot completely avoid mathematics when talking about machine learning,
+                but tried to reduce its usage to reasonable minimum. Hold tight!
+			</pre></aside>
+        </section>
+        <!-- Speakers -->
+        <section class="speakers">
+            <h1>About me</h1>
+            <div class="speaker">
+                <img src="media/valthebald.jpg" class="speaker">
+                <h2>Valery "valthebald" Lourie</h2>
+                <div class="role">Drupal Developer, FFW Agency</div>
+                <div class="twitter">valthebald</div>
+            </div>
+        </section>
+
+
+        <!-- Regular list slide -->
+        <section class="slide">
+            <h1>Agenda</h1>
+            <h2>What we <em>will</em> discuss</h2>
+            <ul>
+                <li class="fragment">What is machine learning</li>
+                <li class="fragment">Supervised learning</li>
+                <li class="fragment">Linear regression</li>
+                <li class="fragment">Online learning</li>
+                <li class="fragment">References</li>
+            </ul>
+            <aside class="notes"><pre>
+        This short introduction is inspired by the excellent coure of Stanford University,
+        available online (link will be in the references section).
+    </pre></aside>
+        </section>
+        <!-- Regular slide -->
+
+        <section class="slide">
+            <h1>Agenda</h1>
+
+            <h2>What we will <em>not</em> discuss</h2>
+
+            <ul>
+                <li>Use of commercial APIs</li>
+                <li>Auto tagging</li>
+                <li>Neural networks</li>
+                <li>Non-supervised learning</li>
+                <li class="fragment">When robots will take over the world</li>
+                <li class="fragment">Magic</li>
+            </ul>
+            <aside class="notes"><pre>
+Since machine learning is a very wide topic, we will be able to discuss only small part of it.
+Luckily, there are many resources, including Drupal-specific, that can help you in using ML in your everyday activity
+So first, we will skip ready, commercial APIs from companies like Google (Cloud API), or MicroSoft (Azure Cognitive Services).
+Both have Drupal modules and work with either pretrained or DIY data sets, for the real life examples of integrating Google SDKs with local
+news service Patch.com you can watch Pantheon's webinar (link in the end).
+
+We also will not talk about tasks that have known solutions, and even Drupal modules - for the list of those I recommend reading OpenSense post
+on top Drupal modules that use AI.
+
+In other words, let's jump to the land of unknown, and start from the basics - what is machine learning
+    </pre></aside>
+        </section>
+
+
+        <section class="quote">
+            <blockquote>Field of study that gives computers the ability to learn without being explicitly programmed</blockquote>
+            <small class="author">Arthur Samuel</small>
+            <aside class="notes"><pre>
+						Here's one of the first definitions of machine learning.
+						Being intuitive, it doesn't give us much idea of where to start from
+						</pre>
+            </aside>
+        </section>
+
+
+        <section class="quote">
+            <blockquote style="font-size:100%">A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</blockquote>
+            <small class="author">Tom Mitchell</small>
+            <aside class="notes"><pre>
+						This one is more "formal". Let's now understand what are variable E, T, and P
+						</pre>
+        </section>
+
+        <section class="slide">
+            <img src="media/umami.png" class="no-frame" alt="Umami" />
+
+            <aside class="notes"><pre>
+						Let's imagine you build a site with multiple pages. You can have different monetizing models: you can sell items,
+						profit from advertiser, or get financed by some government organisation based on your traffic numbers.
+						You have a lot of items to "sell" to the customer (in quotes because money is not always involved in the process),
+						and you constantly adding new items.
+
+						You have few areas where you list important (from your PoV) items: top menu, featured block etc.
+						You can even measure performance of those items using A/B testing tools.
+
+						But if you a new item with no known performance, how do you decide whether to replace existing featured items? Let's try
+						to formulate the question in the terms of the previous slide.
+
+						T - predicting CTR, average purchase, time on page etc.
+						E - data collected from analytics data or/and webserver log analysis
+						P - difference between predicted and actual performance.
+					</pre>
+            </aside>
+        </section>
+
+
+        <section class="slide">
+            <h1>Supervised learning</h1>
+            <h2>We know "correct" values</h2>
+
+            <ul>
+                <li>Regression</li>
+                <li>Classification</li>
+            </ul>
+
+            <aside class="notes"><pre>
+						Before digging into Umami dilemma, let's first talk about machine learning tasks types - i.e. T in the definition of machine learning
+						One group of task classes is supervised learning. It's when our experimental data E is "labelled",
+						i.e. for every item in E we know "correct" value - i.e. what is CTR.
+            Regression - predicted values are within continious range, i.e.
+            Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
+            Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
+        </pre></aside>
+        </section>
+
+        <section class="slide">
+            <h1>Unsupervised learning</h1>
+            <h2>Unlabeled data</h2>
+
+            <ul>
+                <li>Clustering</li>
+                <li>Dimension reduction</li>
+                <li>Anomaly detection</li>
+            </ul>
+
+            <aside class="notes"><pre>
+            Clustering - group unlabeled data into clusters of values
+			Dimension reduction -
+
+        </pre></aside>
+        </section>
+
+        <section class="section">
+            <h1>Learning flow</h1>
+
+            <ul>
+                <li>Initialize hypothesis function parameters</li>
+                <li>Learn using training set</li>
+                <li>Validate using validation set</li>
+            </ul>
+
+            <aside class="notes">Here is the training flow, independent of class type
+                Learning is essentially minimizing the chosen cost function.
+                What do depend on the class type, are hypothesis and cost functions</aside>
+        </section>
+
+        <section class="slide">
+            <h1>E - experimental data</h1>
+
+            <h2>Features</h2>
+            <ul>
+                <li>Visitor demographics (country/language)</li>
+                <li>Time (weekday/hour)</li>
+                <li>Previous history of actions</li>
+                <li>Current page data (taxonomy)</li>
+                <li>Update date of the content</li>
+            </ul>
+
+            <h2>Labels</h2>
+
+            <ul>
+                <li>Time on page</li>
+                <li>CTR</li>
+                <li>Probability of purchase</li>
+                <li>Average purchase amount</li>
+            </ul>
+
+            <aside class="notes"><pre>
+						Given that all of values that we need to predict lay in continuous range, we're talking about regression class of tasks.
+						Most popular hypothesis function used in regression task is linear function.
+					</pre>
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h1>Linear regression</h1>
+            <h2>Hypothesis</h2>
+
+            \[ h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times X\]
+
+            <img class="no-frame" src="media/house_prices.png" alt="Housing prices" />
+
+            <aside class="notes">
+                Let's start with linear regression task that has only one label, and only one feature.
+            </aside>
+
+        </section>
+
+        <section class="section">
+            <h1>Linear regression</h1>
+
+            <h2>Hypothesis</h2>
+
+            \[ h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times X\]
+
+            <h2>Cost function</h2>
+
+            \[ J(&theta;) = \frac1{2m} \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right)^2 \]
+
+            <aside class="notes">
+                m - number of samples in the training set.
+            </aside>
+        </section>
+
+
+        <section class="section">
+            <h1>Gradient descent</h1>
+
+            <img class="no-frame" src="media/descent.png" /><br/>
+        </section>
+
+        <section class="slide">
+            <h1>Gradient descent</h1>
+
+            <h2>Formal definition</h2>
+
+            \[ \mathbf{&theta;}_j = \mathbf{&theta;}_j - &alpha; \frac{\partial}{\partial\mathbf{&theta;}_j} J(&theta;) \]
+
+            <div class="fragment">Repeat until convergence</div>
+
+            <aside class="notes">
+                m - number of samples in the training set.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h1>Gradient descent with one feature</h1>
+            <h2>Derivatives</h2>
+
+            <div class="fragment">
+                \[ \frac{\partial}{\partial\mathbf{&theta;}_0} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \]
+                \[ \frac{\partial}{\partial\mathbf{&theta;}_1} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \times X^{(i)}\]
+            </div>
+        </section>
+
+        <section>
+            <h2>Classification problem</h2>
+
+            <img class="no-frame" src="media/sigmoid_formula.png" />
+
+            <img class="no-frame" src="media/sigmoid.png">
+        </section>
+
+        <section class="slide">
+            <h1>More features, more labels!</h1>
+            <h2>Hypothesis</h2>
+
+            \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 \]
+
+            <div class="fragment"> \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 + \mathbf{&theta;}_2 \times {X}_2\] </div>
+            <div class="fragment"> \[h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times {X}_1 + ... \mathbf{&theta;}_N \times {X}_N\] </div>
+
+            <div class="fragment">
+                \[
+                h = \begin{bmatrix}
+                \mathbf{&theta;}_0 \mathbf{&theta;}_1 .. \mathbf{&theta;}_N
+                \end{bmatrix} \times
+                \begin{bmatrix}
+                1 \\
+                \mathbf{X}_1 \\
+                .. \\
+                \mathbf{X}_N
+                \end{bmatrix} \]
+            </div>
+
+            <aside class="notes">
+                Adding new features is also a way to have non-linear derivatives of original features, but still use linear regression.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h1>More features, more labels!</h1>
+            <h2>Hypothesis</h2>
+
+            <div>
+                \[
+                h = \begin{bmatrix}
+                \mathbf{&theta;}_{10} \mathbf{&theta;}_{11} .. \mathbf{&theta;}_{1N} \\
+                \mathbf{&theta;}_{20} \mathbf{&theta;}_{21} .. \mathbf{&theta;}_{2N} \\
+                .. \\
+                \mathbf{&theta;}_{L0} \mathbf{&theta;}_{L1} .. \mathbf{&theta;}_{LN}
+
+                \end{bmatrix} \times
+                \begin{bmatrix}
+                1 \\
+                \mathbf{X}_1 \\
+                .. \\
+                \mathbf{X}_N
+                \end{bmatrix} \]
+            </div>
+
+            <div class="fragment">
+                \[ h = &theta; \times X \]
+                \[ \frac{\partial}{\partial\mathbf{&theta;}_j} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \times X^{(i,j)}\]
+            </div>
+
+            <aside class="notes">
+                Adding new features is also a way to have non-linear derivatives of original features, but still use linear regression.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Less features!</h2>
+
+            <img class="no-frame" src="media/linear_regular.png" />
+
+            <aside class="notes">
+                Let's penalize new features!
+                Better way to use/select non-linear features is to use layered structure (neural networks),
+                that can itself learn importance of certain feature combinations.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Bias vs variance</h2>
+
+            <img class="no-frame" src="media/bias_overfitting.png" alt="Bias vs variance" />
+
+            <aside>
+                High bias (underfitting): high cost for all sets
+                High variance (overfitting): low cost for training set, cost for test set much higher
+            </aside>
+        </section>
+
+        <section>
+
+            <h2>Validating the model</h2>
+
+            <ul>
+                <li>Training set: 60%</li>
+                <li>Cross validation set: 20%</li>
+                <li>Test set: 20%</li>
+            </ul>
+
+            <ol>
+                <li>Optimize the parameters in Θ using the training set for each polynomial degree.</li>
+                <li>Find polynomial degree with least error using cross validation</li>
+                <li>Estimate generalization error using test set</li>
+            </ol>
+
+        </section>
+
+        <section>
+            <h2>Working with large data set</h2>
+
+            <h3>Stochastic gradient descent</h3>
+
+            <ul>
+                <li>Shuffle training set</li>
+                <li>Perform gradient descent for single example</li>
+                <li>Choose low &alpha;!</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Working with large data set</h2>
+
+            <h3>Online learning</h3>
+
+            <ul>
+                <li>Process training examples as they go</li>
+                <li>Adjust parameters &theta; after every example</li>
+                <li>Throw examples immediately</li>
+                <li class="fragment">Bonus: adjust to changing users preferences</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h1>The task: what's missing?</h1>
+
+            <h2>Features</h2>
+            <ul>
+                <li>Visitor demographics (country/language)</li>
+                <li>Time (weekday/hour)</li>
+                <li>Previous history of actions</li>
+                <li>Current page data (taxonomy)</li>
+                <li>Update date of the content</li>
+            </ul>
+
+            <h2>Split test and feedback</h2>
+        </section>
+
+        <section class="slide">
+            <h1>Questions</h1>
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="https://www.drupaleurope.org/session/content-management-ai-driven-world">Drupal Europe session (with video recording)</a></li>
+                <li><a href="https://www.coursera.org/learn/machine-learning">Machine learning on Coursera</a></li>
+                <li><a href="https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms">Quora on difference supervised vs non-supervised</a> </li>
+                <li><a href="https://www.gnu.org/software/octave/">Octave</a></li>
+                <li><a href="https://github.com/php-ai/php-ml">PHP-ML</a></li>
+                <li><a href="https://pantheon.io/resources/artificial-intelligence-your-cms">Artificial intelligence and your CMS</a></li>
+                <li><a href="https://opensenselabs.com/blog/tech/top-2018-drupal-modules-using-artificial-intelligence">Top Drupal modules using AI</a> </li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h1>Contribution day on Friday!</h1>
+            <h2> </h2>
+
+            <ul>
+                <li>First-time sprinters workshop</li>
+                <li>Mentored contribution</li>
+                <li>Contribution by topic</li>
+            </ul>
+        </section>
+
+    </section>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } }
+        ]
+    });
+
+    Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
