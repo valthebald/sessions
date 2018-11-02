@@ -92,7 +92,6 @@
                 <li>Neural networks</li>
                 <li>Non-supervised learning</li>
                 <li class="fragment">When robots will take over the world</li>
-                <li class="fragment">Magic</li>
             </ul>
             <aside class="notes"><pre>
 Since machine learning is a very wide topic, we will be able to discuss only small part of it.
@@ -161,9 +160,9 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             </ul>
 
             <aside class="notes"><pre>
-						Before digging into Umami dilemma, let's first talk about machine learning tasks types - i.e. T in the definition of machine learning
-						One group of task classes is supervised learning. It's when our experimental data E is "labelled",
-						i.e. for every item in E we know "correct" value - i.e. what is CTR.
+			Before digging into Umami dilemma, let's first talk about machine learning tasks types - i.e. T in the definition of machine learning
+			One group of task classes is supervised learning. It's when our experimental data E is "labelled",
+			i.e. for every item in E we know "correct" value - i.e. what is CTR.
             Regression - predicted values are within continious range, i.e.
             Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
             Classification - predicted value is boolean, i.e. given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
@@ -189,7 +188,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
 
         <section class="section">
             <h1>Learning flow</h1>
-
             <ul>
                 <li>Initialize hypothesis function parameters</li>
                 <li>Learn using training set</li>
@@ -206,6 +204,7 @@ In other words, let's jump to the land of unknown, and start from the basics - w
 
             <h2>Features</h2>
             <ul>
+                <li>Position in the list</li>
                 <li>Visitor demographics (country/language)</li>
                 <li>Time (weekday/hour)</li>
                 <li>Previous history of actions</li>
@@ -231,14 +230,50 @@ In other words, let's jump to the land of unknown, and start from the basics - w
 
         <section class="slide">
             <h1>Linear regression</h1>
+            <h2>Experimental data</h2>
+
+            <img class="no-frame" src="media/ctr-position.png" alt="CTR dependent on position" />
+
+            <div>Taken from https://www.wordstream.com/adwords-click-through-rate</div>
+
+            <aside class="notes">
+                Let's start with regression task that has one label and one feature. Here we can see experimental data on CTR as
+                a function of position in Google's search results. I assume similar date you can obtain by measuring CTR of products
+                depending on their position in the featured products block.
+            </aside>
+
+        </section>
+
+        <section class="slide">
+            <h1>Linear regression</h1>
             <h2>Hypothesis</h2>
 
             \[ h = \mathbf{&theta;}_0 + \mathbf{&theta;}_1 \times X\]
 
-            <img class="no-frame" src="media/house_prices.png" alt="Housing prices" />
+            <img class="no-frame" src="media/linear-position.png" alt="CTR dependent on position" />
+
+            <ul>
+                <li class="fragment">\[Light green:  \mathbf{&theta;}_0 = 0; \mathbf{&theta;}_1 = 0.1; \]</li>
+                <li class="fragment">\[Light blue:  \mathbf{&theta;}_0 = -0.3; \mathbf{&theta;}_1 = 0.1; \]</li>
+                <li class="fragment">\[Dark blue:  \mathbf{&theta;}_0 = 9; \mathbf{&theta;}_1 = -0.05; \]</li>
+            </ul>
 
             <aside class="notes">
-                Let's start with linear regression task that has only one label, and only one feature.
+                The simplest and by far the most popular method for approximating experimental data is linear regression,
+                i.e. hypothesis function - our prediction function - is the linear function
+                Mathematicians use these fancy variable names theta to confuse everyone, but essentially function on the slide describes
+                a line. Line has 2 parameters: offset from 0 (theta_0) and slope (theta_1)
+
+                Our task is to find such values of theta that "fit better" experimental data.
+
+                Intuitively it's clear that dark blue line more accurately describes the experimental data
+                (thus can predict CTR for the new products).
+
+                More accurate means smaller difference between predicted and experimental data.
+
+                What we need to do is go over all experimental data, and sum the distance from predicted and actial values
+
+                By Indeed123 - commons, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=5508870
             </aside>
 
         </section>
@@ -255,6 +290,8 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             \[ J(&theta;) = \frac1{2m} \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right)^2 \]
 
             <aside class="notes">
+                Don't be scared, this is the same formula - sum of distances between predicted and experimental data,
+                divided by the number of samples.
                 m - number of samples in the training set.
             </aside>
         </section>
@@ -264,6 +301,28 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             <h1>Gradient descent</h1>
 
             <img class="no-frame" src="media/descent.png" /><br/>
+        </section>
+
+        <section class="section">
+            <h1>Gradient descent</h1>
+
+            <img class="no-frame" src="media/descent.png" /><br/>
+            <aside class="notes">
+                To find the best values of theta, we start from random values (typically from zeros, but can be any starting point),
+                perform small change of theta, and then change them towards  the direction of smaller error values
+
+            </aside>
+        </section>
+
+        <section class="section">
+            <h1>Gradient descent</h1>
+
+            <img class="no-frame" src="media/descent-linear.png" />
+            <aside class="notes">
+                In general case, final result of gradient descent is not necessarily the best one - pitfall of local minimums.
+                Luckily, for linear regression cost function is always convex, so we end up at the global minimum.
+                (Another reason for popularity of linear regression)
+            </aside>
         </section>
 
         <section class="slide">
@@ -288,14 +347,6 @@ In other words, let's jump to the land of unknown, and start from the basics - w
                 \[ \frac{\partial}{\partial\mathbf{&theta;}_0} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \]
                 \[ \frac{\partial}{\partial\mathbf{&theta;}_1} J(&theta;) = \frac1m \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right) \times X^{(i)}\]
             </div>
-        </section>
-
-        <section>
-            <h2>Classification problem</h2>
-
-            <img class="no-frame" src="media/sigmoid_formula.png" />
-
-            <img class="no-frame" src="media/sigmoid.png">
         </section>
 
         <section class="slide">
@@ -409,7 +460,7 @@ In other words, let's jump to the land of unknown, and start from the basics - w
             </ul>
         </section>
 
-        <section>
+        <section>&theta;
             <h2>Working with large data set</h2>
 
             <h3>Online learning</h3>
@@ -494,6 +545,9 @@ In other words, let's jump to the land of unknown, and start from the basics - w
                 } },
             { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
                     hljs.initHighlightingOnLoad();
+                } },
+            { src: '../plugin/math/math.js', async: true, condition: function () {
+                    return !!document.body.classList;
                 } },
             { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
                     return !!document.body.classList;
