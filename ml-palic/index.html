@@ -432,11 +432,38 @@ In other words, let's jump to the land of unknown, and start from the basics - w
 
             <h3>Stochastic gradient descent</h3>
 
+            <img src="media/ctr-position.png" alt="Experiment" />
+
+            <div>\[ J(&theta;) = \frac1{2m} \sum_{i=1}^m \left( h(X^{(i)}) - y^{(i)} \right)^2 \]</div>
+
+            <aside class="notes"><pre>
+                Let's address the first challenge when working with website visitors data - it is huge.
+                We calculate the cost function by going over ALL data items, and compare predicted and actual label values.
+
+                We do that for every step of changing parameters. This method is reliable, but slow
+            </pre></aside>
+        </section>
+
+        <section>
+            <h2>Working with large data set</h2>
+
+            <h3>Stochastic gradient descent</h3>
+
+            <img src="media/ctr-position.png" alt="Experiment" />
+
             <ul>
                 <li>Shuffle training set</li>
                 <li>Perform gradient descent for single example</li>
                 <li>Choose low &alpha;!</li>
             </ul>
+            <aside class="notes"><pre>
+                What if we take even smaller steps, but get some benefit from going over not the full set of experimental data,
+                but only one?
+
+                This method called stochastic gradient descent. Due to its nature, it's not guaranteed that you only go down finding the global minimum of cost function,
+                but if you have large, randomly distributed set, you'll get to the point - and much quicker than in case of "regular" gradient descent
+                (which is also called batch gradient descent)
+            </pre></aside>
         </section>
 
         <section>
@@ -452,6 +479,8 @@ In other words, let's jump to the land of unknown, and start from the basics - w
                 Online learning is the process when you don't have static experimental data,
                 but instead you constantly get a stream of new items.
                 This is very similar to stochastic gradient descent process that we have seen on the previous slide.
+                We get data items one by one, adjust theta values by small portion, and immediately throw away incoming data.
+                Bonus - we adjust to changing user preferences!
             </pre></aside>
         </section>
 
