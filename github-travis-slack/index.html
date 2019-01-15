@@ -19,6 +19,7 @@
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="../reveal.js-3.7.0/lib/css/zenburn.css">
 
+    <style>img {border: 0}</style>
     <!--[if lt IE 9]>
     <script src="../reveal.js-3.7.0/lib/js/html5shiv.js"></script>
     <![endif]-->
@@ -79,24 +80,83 @@
                 <li>Travis subscription</li>
                 <li>Slack as the main communication channel</li>
                 <li class="fragment">Acquia BLT</li>
-                <li class="fragment"></li>
+                <li class="fragment">Local docker environment</li>
             </ul>
             <aside class="notes"><pre>
-                Because of Travi
+                Travis uses docker containers to run its builds, so we decided to use docker locally too.
     </pre></aside>
         </section>
         <!-- Regular slide -->
 
+        <section>
+            <img src="media/travis-ci.png" alt="Travis CI" />
+            <aside class="notes">
+                Multi-platform, multi-language continuous integration tool based on docker containers.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Moving parts</h2>
+
+            <img src="media/moving_parts.png" alt="Moving parts" />
+            <aside class="notes"><pre>
+                We want to check the code after it is pushed to github - before and after it is merged.
+                Checks include codesniff checks, and tests supported by BLT.
+                We also want to inform the relevant people when certain events occur.
+                Optionally, if tests pass, we want to update the dev environment.
+    </pre></aside>
+        </section>
+
+        <section>
+
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <img src="media/github-webhook.png" alt="webhooks definition" />
+            <aside class="notes">
+                Let's start with the github part. Using repository or organisation level settings,
+                it is possible to register external URLs that will be notified when certain events occur.
+                These external URLs are called webhooks.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <h3>Event options</h3>
+
+            <ul>
+                <li>Just the push event</li>
+                <li>Send me <strong>everything</strong></li>
+                <li>Select individual events:
+                    <ul class="fragment">
+                        <li>Check runs</li>
+                        <li>Commmit commentt</li>
+                        <li>wiki edits</li>
+                        <li>...</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <img src="media/github-deprecated.png" alt="Travis integration" />
+            <aside class="notes">
+                Some external applications have preconfigured settings, and can be enabled using the integrations tab.
+                This is how travis is set up.
+            </aside>
+        </section>
+
         <section class="slide">
             <h2>Q & A</h2>
             <ul>
-                <li><a href="https://www.drupaleurope.org/session/content-management-ai-driven-world">Drupal Europe session (with video recording)</a></li>
-                <li><a href="https://www.coursera.org/learn/machine-learning">Machine learning on Coursera</a></li>
-                <li><a href="https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms">Quora on difference supervised vs non-supervised</a> </li>
-                <li><a href="https://www.gnu.org/software/octave/">Octave</a></li>
-                <li><a href="https://github.com/php-ai/php-ml">PHP-ML</a></li>
-                <li><a href="https://pantheon.io/resources/artificial-intelligence-your-cms">Artificial intelligence and your CMS</a></li>
-                <li><a href="https://opensenselabs.com/blog/tech/top-2018-drupal-modules-using-artificial-intelligence">Top Drupal modules using AI</a> </li>
+                <li><a href="https://blt.readthedocs.io/en/latest/">Acquia BLT documentation</a></li>
+                <li><a href="https://developer.github.com/v3/activity/events/types/">Github events and payloads</a></li>
+                <li><a href="https://docs.travis-ci.com/user/for-beginners/">Travis CI tutorial</a></li>
             </ul>
         </section>
 
