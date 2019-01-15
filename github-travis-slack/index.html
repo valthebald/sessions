@@ -88,12 +88,6 @@
         </section>
         <!-- Regular slide -->
 
-        <section>
-            <img src="media/travis-ci.png" alt="Travis CI" />
-            <aside class="notes">
-                Multi-platform, multi-language continuous integration tool based on docker containers.
-            </aside>
-        </section>
 
         <section class="slide">
             <h2>Moving parts</h2>
@@ -107,8 +101,22 @@
     </pre></aside>
         </section>
 
-        <section>
 
+        <section>
+            <img src="media/travis-ci.png" alt="Travis CI" />
+            <aside class="notes">
+                Multi-platform, multi-language continuous integration tool based on docker containers.
+                Its behavior is controlled by single YAML file which is part of git repository
+            </aside>
+        </section>
+
+        <section>
+            <h2>Acquia BLT</h2>
+            <aside class="notes">
+                Build and launch tools is a set of best practices (as seen by Acquia engineers), based on Robo
+
+                It has commmands for setting up, syncing and testing Drupal, and ready recipes for integrating with common CI systems.
+            </aside>
         </section>
 
         <section class="slide">
@@ -152,11 +160,52 @@
         </section>
 
         <section class="slide">
+            <h2>Initialize Travis settings</h2>
+            <code>
+                blt recipes:ci:travis:init
+            </code>
+            Travis template in BLT: https://github.com/acquia/blt/blob/10.0.x/scripts/travis/.travis.yml
+        </section>
+
+        <section class="slide">
+            <h2>Pitfall! Connecting to your dev server</h2>
+            <h3>TL;DR; Use `travis` cli tool</h3>
+            <pre class="fragment"><code>
+env:
+  global:
+  - COMPOSER_BIN=$TRAVIS_BUILD_DIR/vendor/bin
+  - BLT_DIR=$TRAVIS_BUILD_DIR/vendor/acquia/blt
+  - BUILD_DIR=$TRAVIS_BUILD_DIR
+  - BEHAT_DIR=$TRAVIS_BUILD_DIR/tests/behat
+  - secure: aN......1uXuk=
+
+# Add encrypted key
+before_install:
+  - mkdir -p ~/.ssh
+  - openssl aes-256-cbc -K $encrypted_28e0e7efd7c8_key -iv $encrypted_28e0e7efd7c8_iv
+  -in id_rsa_travis.enc -out ~/.ssh/id_rsa -d
+            </code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Travis</h2>
+            <img src="media/travis-settings.png" alt="Travis settings" />
+            <aside class="notes">Log in with github account</aside>
+        </section>
+
+        <section class="slide">
+            <h2>Travis log</h2>
+            <img src="media/travis-log.png" alt="Travis log" />
+        </section>
+
+        <section class="slide">
             <h2>Q & A</h2>
             <ul>
                 <li><a href="https://blt.readthedocs.io/en/latest/">Acquia BLT documentation</a></li>
                 <li><a href="https://developer.github.com/v3/activity/events/types/">Github events and payloads</a></li>
                 <li><a href="https://docs.travis-ci.com/user/for-beginners/">Travis CI tutorial</a></li>
+                <li><a href="https://docs.travis-ci.com/user/private-dependencies/">Private key in Travis</a> </li>
+                <li><a href="https://robo.li/">Robo task runner</a></li>
             </ul>
         </section>
 
