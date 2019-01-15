@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
 
-    <title>Machine learning and content management</title>
+    <title>Github+Travis+Slack: assembling all the moving parts</title>
 
     <meta name="author" content="Valery 'valthebald' Lourie"/>
 
@@ -35,7 +35,7 @@
         <section class="title">
             <h2>Github+Travis+Slack</h2>
 
-            <h3><a href="//bit.ly/ml-palic">bit.ly/ml-palic</a></h3>
+            <h3><a href="//bit.ly/ffw1901">bit.ly/ffw1901</a></h3>
 
             <p>Assembling all the moving parts together</p>
 
@@ -164,7 +164,7 @@
             <code>
                 blt recipes:ci:travis:init
             </code>
-            Travis template in BLT: https://github.com/acquia/blt/blob/10.0.x/scripts/travis/.travis.yml
+            Travis template in BLT: <a href="https://github.com/acquia/blt/blob/10.0.x/scripts/travis/.travis.yml" target="_blank">open in github</a>
         </section>
 
         <section class="slide">
@@ -185,6 +185,46 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_28e0e7efd7c8_key -iv $encrypted_28e0e7efd7c8_iv
   -in id_rsa_travis.enc -out ~/.ssh/id_rsa -d
             </code></pre>
+
+            <aside class="notes">
+                Don't forget to add the dev server to the list of known hosts
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Pitfall! Behat tests do not start</h2>
+            <ul>
+                <li>Selenium server</li>
+                <li>Headless browser</li>
+            </ul>
+            <pre class="fragment"><code>
+            </code></pre>
+            # Install chromedriver
+            - VERSION=$(curl http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+            - wget https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip -P .composer/cache
+            - unzip .composer/cache/chromedriver_linux64.zip
+            - sudo mv chromedriver /usr/bin/chromedriver
+            # Install selenium
+            - sudo mkdir -p /var/selenium
+            - sudo chown travis /var/selenium
+            - wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar -P .composer/cache
+            - mv .composer/cache/selenium-server-standalone-3.141.59.jar /var/selenium/
+            #- java -jar /var/selenium/selenium-server-standalone-3.141.59.jar -Dwebdriver.chrome.driver=/usr/bin/chromedriver &
+            - java  -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar /var/selenium/selenium-server-standalone-3.141.59.jar -role standalone -log /var/selenium/selenium.log &
+
+            <aside class="notes">
+                Another option is to use headless firefox.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Prepare the settings</h2>
+
+            <ul>
+                <li>Use custom BLT command</li>
+                <li>Generate settings.php and behat's local.yml from template</li>
+                <li>(optionally) deploy the branch after the tests.</li>
+            </ul>
         </section>
 
         <section class="slide">
