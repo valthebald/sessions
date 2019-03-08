@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Performance part 1. Backend</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../reveal.js-3.7.0/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js-3.7.0/css/theme/white.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js-3.7.0/lib/css/zenburn.css">
+
+    <style>img {border: 0}</style>
+    <!--[if lt IE 9]>
+    <script src="../reveal.js-3.7.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <section class="slides">
+        <!-- Session title -->
+        <section class="title">
+            <h2>Performance part 1. Backend</h2>
+
+            <h3><a href="//bit.ly/ffw1903">bit.ly/ffw1903</a></h3>
+
+            <p>Minimizing the TTFB</p>
+
+            <aside class="notes"><pre>
+				Slides are hosted on github, press 's' if you want to read speaker notes too.
+				All links mentioned in the presentation will be posted in the last slide
+			</pre></aside>
+        </section>
+        <!-- Speakers -->
+        <section class="speakers">
+            <h2>About me</h2>
+            <div class="speaker">
+                <img src="media/valthebald.jpg" class="speaker">
+                <h2>Valery "valthebald" Lourie</h2>
+                <div class="role">Drupal Developer, FFW Agency</div>
+                <div class="twitter">valthebald</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Agenda</h2>
+
+            <ul>
+                <li>Initial setup</li>
+                <li>The target</li>
+                <li>Implementation</li>
+                <li>Pitfalls</li>
+                <li>Q&A and references</li>
+            </ul>
+        </section>
+
+        <!-- Regular list slide -->
+        <section class="slide">
+            <h2>Initial setup</h2>
+            <ul>
+                <li>Code (only) in github</li>
+                <li>Plesk hosting</li>
+                <li>Travis subscription</li>
+                <li>Slack as the main communication channel</li>
+                <li class="fragment">Acquia BLT</li>
+                <li class="fragment">Local docker environment</li>
+            </ul>
+            <aside class="notes"><pre>
+                Travis uses docker containers to run its builds, so we decided to use docker locally too.
+    </pre></aside>
+        </section>
+        <!-- Regular slide -->
+
+
+        <section class="slide">
+            <h2>Moving parts</h2>
+
+            <img src="media/moving_parts.png" alt="Moving parts" />
+            <aside class="notes"><pre>
+                We want to check the code after it is pushed to github - before and after it is merged.
+                Checks include codesniff checks, and tests supported by BLT.
+                We also want to inform the relevant people when certain events occur.
+                Optionally, if tests pass, we want to update the dev environment.
+    </pre></aside>
+        </section>
+
+
+        <section>
+            <img src="media/travis-ci.png" alt="Travis CI" />
+            <aside class="notes">
+                Multi-platform, multi-language continuous integration tool based on docker containers.
+                Its behavior is controlled by single YAML file which is part of git repository
+            </aside>
+        </section>
+
+        <section>
+            <h2>Acquia BLT</h2>
+            <aside class="notes">
+                Build and launch tools is a set of best practices (as seen by Acquia engineers), based on Robo
+
+                It has commmands for setting up, syncing and testing Drupal, and ready recipes for integrating with common CI systems.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <img src="media/github-webhook.png" alt="webhooks definition" />
+            <aside class="notes">
+                Let's start with the github part. Using repository or organisation level settings,
+                it is possible to register external URLs that will be notified when certain events occur.
+                These external URLs are called webhooks.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <h3>Event options</h3>
+
+            <ul>
+                <li>Just the push event</li>
+                <li>Send me <strong>everything</strong></li>
+                <li>Select individual events:
+                    <ul class="fragment">
+                        <li>Check runs</li>
+                        <li>Commmit commentt</li>
+                        <li>wiki edits</li>
+                        <li>...</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Github</h2>
+
+            <img src="media/github-deprecated.png" alt="Travis integration" />
+            <aside class="notes">
+                Some external applications have preconfigured settings, and can be enabled using the integrations tab.
+                This is how travis is set up.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Initialize Travis settings</h2>
+            <code>
+                blt recipes:ci:travis:init
+            </code>
+            Travis template in BLT: <a href="https://github.com/acquia/blt/blob/10.0.x/scripts/travis/.travis.yml" target="_blank">open in github</a>
+        </section>
+
+        <section class="slide">
+            <h2>Pitfall! Connecting to your dev server</h2>
+            <h3>TL;DR; Use `travis` cli tool</h3>
+            <pre class="fragment"><code>
+env:
+  global:
+  - COMPOSER_BIN=$TRAVIS_BUILD_DIR/vendor/bin
+  - BLT_DIR=$TRAVIS_BUILD_DIR/vendor/acquia/blt
+  - BUILD_DIR=$TRAVIS_BUILD_DIR
+  - BEHAT_DIR=$TRAVIS_BUILD_DIR/tests/behat
+  - secure: aN......1uXuk=
+
+# Add encrypted key
+before_install:
+  - mkdir -p ~/.ssh
+  - openssl aes-256-cbc -K $encrypted_28e0e7efd7c8_key -iv $encrypted_28e0e7efd7c8_iv
+  -in id_rsa_travis.enc -out ~/.ssh/id_rsa -d
+            </code></pre>
+
+            <aside class="notes">
+                Don't forget to add the dev server to the list of known hosts
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Pitfall! Behat tests do not start</h2>
+            <ul>
+                <li>Selenium server</li>
+                <li>Headless browser</li>
+            </ul>
+            <pre class="fragment"><code>
+            </code></pre>
+            # Install chromedriver
+            - VERSION=$(curl http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+            - wget https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip -P .composer/cache
+            - unzip .composer/cache/chromedriver_linux64.zip
+            - sudo mv chromedriver /usr/bin/chromedriver
+            # Install selenium
+            - sudo mkdir -p /var/selenium
+            - sudo chown travis /var/selenium
+            - wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar -P .composer/cache
+            - mv .composer/cache/selenium-server-standalone-3.141.59.jar /var/selenium/
+            #- java -jar /var/selenium/selenium-server-standalone-3.141.59.jar -Dwebdriver.chrome.driver=/usr/bin/chromedriver &
+            - java  -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar /var/selenium/selenium-server-standalone-3.141.59.jar -role standalone -log /var/selenium/selenium.log &
+
+            <aside class="notes">
+                Another option is to use headless firefox.
+            </aside>
+        </section>
+
+        <section class="slide">
+            <h2>Prepare the settings</h2>
+
+            <ul>
+                <li>Use custom BLT command</li>
+                <li>Generate settings.php and behat's local.yml from template</li>
+                <li>(optionally) deploy the branch after the tests.</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>Travis</h2>
+            <img src="media/travis-settings.png" alt="Travis settings" />
+            <aside class="notes">Log in with github account</aside>
+        </section>
+
+        <section class="slide">
+            <h2>Travis log</h2>
+            <img src="media/travis-log.png" alt="Travis log" />
+        </section>
+
+        <section class="slide">
+            <h2>Q & A</h2>
+            <ul>
+                <li><a href="https://blt.readthedocs.io/en/latest/">Acquia BLT documentation</a></li>
+                <li><a href="https://developer.github.com/v3/activity/events/types/">Github events and payloads</a></li>
+                <li><a href="https://docs.travis-ci.com/user/for-beginners/">Travis CI tutorial</a></li>
+                <li><a href="https://docs.travis-ci.com/user/private-dependencies/">Private key in Travis</a> </li>
+                <li><a href="https://robo.li/">Robo task runner</a></li>
+            </ul>
+        </section>
+
+
+    </section>
+</div>
+
+<script src="../reveal.js-3.7.0/lib/js/head.min.js"></script>
+<script src="../reveal.js-3.7.0/js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                } },
+            { src: '../plugin/math/math.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } }
+        ]
+    });
+
+    Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
