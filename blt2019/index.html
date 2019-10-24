@@ -52,15 +52,16 @@
             <h2>Agenda</h2>
 
             <ul>
-                <li>What</li>
                 <li>Why</li>
+                <li>What</li>
                 <li>Who</li>
                 <li>How</li>
                 <li>When</li>
                 <li class="fragment">Other questions</li>
             </ul>
             <aside class="notes"><pre>
-        What is BLT? Including a bit of history
+        What is BLT? Including a bit of history, why this product was created
+        based on the business model of Acquia professional services.
         Why I think this can optimize the workflow for Drupal 8 projects, including existing ones.
         Who are intended users of BLT
         Technical architecture
@@ -69,6 +70,56 @@
         ...
         and other questions if we have time
     </pre></aside>
+        </section>
+
+        <section>
+            <h2>Acquia profesional services</h2>
+            <ul>
+                <li>Hosting + architecture</li>
+                <li>Offload implementation to partners</li>
+            </ul>
+            <aside class="notes"><pre>
+                Largest clients go "by default" to Acquia, because it is widely recognized
+                as "the" Drupal company.
+                Cannot handle all possible client projects by itself.
+                Works tightly with its partners.
+                Acquia cloud hosting during warranty period, then up to the client.
+            </pre></aside>
+        </section>
+
+        <section>
+            <h2>Common requirements</h2>
+
+            <ul>
+                <li>Best suited for Acquia cloud</li>
+                <li>...but flexible to support other ISPs</li>
+                <li>Enforce best development practices</li>
+                <li>Reusable recipes</li>
+            </ul>
+
+            <aside class="notes"><pre>
+                Full Acquia development stack:
+                - ADD locally
+                - Build artifacts with BTL
+                - Deploy to Acquia cloud hosting for dev/stage/production with BLT
+                Automatic detection of configuration splits based on AH_ENVIRONMENT variables.
+            </pre></aside>
+        </section>
+
+        <section>
+            <h2>What are best practices?</h2>
+            <ul>
+                <li>Separation of tasks and their settings</li>
+                <li>Decent default settings</li>
+                <li>Pre-commit code quality checks</li>
+                <li>Commit/branch/PR functional testing</li>
+                <li>Support for common CI/CD</li>
+                <li>Self-contained local environment</li>
+            </ul>
+
+            <aside class="notes"><pre>
+                Tasks come from composer package `acquia/blt`, settings in single or multiple YML files
+            </pre></aside>
         </section>
 
         <section>
@@ -90,73 +141,42 @@
             </ul>
 
             <aside class="notes">
-          <pre>Back in 2015, we had a joint project with Acquia. There was string technical consultant from Acquia side,
-          and the project was hosted in Acquia cloud. The project had strict technical requirements:
+          <pre>
+              Simplest and fastest is to store all the recipes (scripts/git hooks etc) in every repository
+              Which is non-maintainable, no option to update.
 
-              - run on read-only file system
-              - have Acquia-specific folder structure of project files
-              - easy upgrade of core and contributed modules (especially security updated)
-              - keep track of applied patches
-              - synchronize configuration changes between environments (local, dev, stage, live)
+              No good ubiquitous package manager before Drupal 8, tasks are stored in shared github repo
 
-              Solution suggested by the consultant was Phing based.
-              Phing is Ant-inspired (anyone from the Java world here?) build tool.
-              Tasks were intensively using Drush commands.
-
-              Phing itself is a composer component, but XML files for Phing were rewritten from scratch for every project.
-
-              It looks like Acquia engineers were already working on Drupal 8-only tool that is reusable, and this was BLT.
-
+              In early versions, tasks were Phing command. (Phing is Ant-inspired task runner)
               Writing tasks in Robo compared to Phing is similar to writing D8 code compared to D7 (we'll talk about writing tasks later)
           </pre>
             </aside>
         </section>
 
         <section>
-            <h3>What is Acquia BLT</h3>
+            <h2>Current state</h2>
 
-            <h4>Build and Launch Tool</h4>
-
-            <ul>
-                <li class="fragment">Optimized for Acquia ecosystem
-                    <ul>
-                        <li>Develop locally with <a href="https://www.drupalvm.com/">DrupalVM</a></li>
-                        <li>Build artifacts with BLT</li>
-                        <li>Deploy to Acquia cloud</li>
-                    </ul>
-                </li>
-                <li class="fragment">Extensive <a href="https://blt.readthedocs.io/en/latest/">documentation</a></li>
-                <li class="fragment">Best practices in repeating tasks</li>
-            </ul>
-            <aside class="notes">
-      <pre>
-          Mathew Grasmick
-          Jeff Geerling - DrupalVM maintainer
-          Dane Powell
-
-          Ironically, the first project where we tried BLT was hosted with another provider (Platform.sh).
-          Which gives a hint on system flexibility.
-      </pre>
-            </aside>
+            <h3>Version 10.5 (released Oct 2, 2019)</h3>
         </section>
 
         <section>
-            <h3>What is Acquia BLT</h3>
-
-            <h4>Build and Launch Tool</h4>
+            <h3>Features</h3>
 
             <ul>
-                <li class="fragment">Setup </li>
-                <li class="fragment">Build</li>
-                <li class="fragment">Sync</li>
-                <li class="fragment">Test</li>
-                <li class="fragment">Deploy</li>
+                <li class="fragment">Local git hooks </li>
+                <li class="fragment">Testing frameworks</li>
+                <li class="fragment">Automation tasks</li>
+                <li class="fragment">Artifact generation</li>
+                <li class="fragment">Integrations</li>
             </ul>
             <aside class="notes">
       <pre>
           Setup - generate dependencies, default settings, CI integration, tests, optionally install Drupal
-          Build - compile JavaScript, ES6 to ES5, NPM modules
+          Automation: install/update/downsync/sanitize.
+          Several options for reinstall: from scratch, from SQL dump, from another environment.
           2 supported sync types: CMI and features.
+          Build - compile JavaScript, ES6 to ES5, NPM modules
+          Integration with CI/CD tools: Acquia pipelines, gitlab CI, Travis
       </pre>
             </aside>
         </section>
@@ -223,7 +243,7 @@
             <h3>Questions?</h3>
 
             <ul>
-                <li>https://blt.readthedocs.io/en/latest/</li>
+                <li>https://docs.acquia.com/blt/</li>
                 <li>https://robo.li/</li>
                 <li>https://www.phing.info/</li>
             </ul>
