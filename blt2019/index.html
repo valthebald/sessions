@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Acquia BLT</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../reveal.js-3.7.0/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js-3.7.0/css/theme/league.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js-3.7.0/lib/css/zenburn.css">
+
+    <style>img {border: 0}</style>
+    <!--[if lt IE 9]>
+    <script src="../reveal.js-3.7.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <section class="slides">
+        <!-- Session title -->
+        <section class="title">
+            <h2>Acquia BLT</h2>
+            <h3>Extend and override defaults</h3>
+            <h3><a href="//bit.ly/ffw-blt">bit.ly/ffw-blt</a></h3>
+
+            <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+            <br/>
+        </section>
+        <section>
+            <h2>About myself</h2>
+            <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+            <a href="https://www.drupal.org/core-mentoring">Core mentoring coordinator</a>  <br/>
+            <aside class="notes">I use nick "valthebald" practically in every social network I'm registered</aside>
+        </section>
+
+        <section>
+            <h2>Agenda</h2>
+
+            <ul>
+                <li>What</li>
+                <li>Why</li>
+                <li>Who</li>
+                <li>How</li>
+                <li>When</li>
+                <li class="fragment">Other questions</li>
+            </ul>
+            <aside class="notes"><pre>
+        What is BLT? Including a bit of history
+        Why I think this can optimize the workflow for Drupal 8 projects, including existing ones.
+        Who are intended users of BLT
+        Technical architecture
+        Defaults and how to override them
+        Hooks and how to use them
+        ...
+        and other questions if we have time
+    </pre></aside>
+        </section>
+
+        <section>
+            <h2>History</h2>
+
+            <ul>
+                <li class="fragment">2016 - Drupal 7 and  <a href="https://www.phing.info/"><img src="media/phing.gif" alt="Phing" /></a></li>
+                <li class="fragment">How do you reuse this???</li>
+                <li class="fragment">June 2016 - First public BLT release (8.0.0)
+                    <ul>
+                        <li>Phing based XML templates</li>
+                        <li>Tasks are PHP classes</li>
+                        <li>Configuration with single YML file</li>
+                        <li>All-in-one package (DrupalVM + Drush + Behat + PhantomJS)</li>
+                        <li>Composer package since 8.3.0 (August 2016)</li>
+                    </ul>
+                </li>
+                <li class="fragment">2017 - Switch to Robo <a href="https://robo.li/"><img src="media/robo.png" alt="Robo" /></a> </li>
+            </ul>
+
+            <aside class="notes">
+          <pre>Back in 2015, we had a joint project with Acquia. There was string technical consultant from Acquia side,
+          and the project was hosted in Acquia cloud. The project had strict technical requirements:
+
+              - run on read-only file system
+              - have Acquia-specific folder structure of project files
+              - easy upgrade of core and contributed modules (especially security updated)
+              - keep track of applied patches
+              - synchronize configuration changes between environments (local, dev, stage, live)
+
+              Solution suggested by the consultant was Phing based.
+              Phing is Ant-inspired (anyone from the Java world here?) build tool.
+              Tasks were intensively using Drush commands.
+
+              Phing itself is a composer component, but XML files for Phing were rewritten from scratch for every project.
+
+              It looks like Acquia engineers were already working on Drupal 8-only tool that is reusable, and this was BLT.
+
+              Writing tasks in Robo compared to Phing is similar to writing D8 code compared to D7 (we'll talk about writing tasks later)
+          </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h3>What is Acquia BLT</h3>
+
+            <h4>Build and Launch Tool</h4>
+
+            <ul>
+                <li class="fragment">Optimized for Acquia ecosystem
+                    <ul>
+                        <li>Develop locally with <a href="https://www.drupalvm.com/">DrupalVM</a></li>
+                        <li>Build artifacts with BLT</li>
+                        <li>Deploy to Acquia cloud</li>
+                    </ul>
+                </li>
+                <li class="fragment">Extensive <a href="https://blt.readthedocs.io/en/latest/">documentation</a></li>
+                <li class="fragment">Best practices in repeating tasks</li>
+            </ul>
+            <aside class="notes">
+      <pre>
+          Mathew Grasmick
+          Jeff Geerling - DrupalVM maintainer
+          Dane Powell
+
+          Ironically, the first project where we tried BLT was hosted with another provider (Platform.sh).
+          Which gives a hint on system flexibility.
+      </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h3>What is Acquia BLT</h3>
+
+            <h4>Build and Launch Tool</h4>
+
+            <ul>
+                <li class="fragment">Setup </li>
+                <li class="fragment">Build</li>
+                <li class="fragment">Sync</li>
+                <li class="fragment">Test</li>
+                <li class="fragment">Deploy</li>
+            </ul>
+            <aside class="notes">
+      <pre>
+          Setup - generate dependencies, default settings, CI integration, tests, optionally install Drupal
+          Build - compile JavaScript, ES6 to ES5, NPM modules
+          2 supported sync types: CMI and features.
+      </pre>
+            </aside>
+        </section>
+
+
+        <section>
+            <h3>What is a command</h3>
+
+            <h4>Robo uses <a href="https://github.com/consolidation/annotated-command">annotation discovery</a> </h4>
+
+            <img class="fragment" src="media/command.png" alt="Deploy command" />
+
+            <h4><a href="https://blt.readthedocs.io/en/latest/readme/extending-blt/">Add your own!</a> </h4>
+
+            <aside class="notes">
+      <pre>
+          Annotation discovery is the most common discovery type for Drupal 8 plugins
+
+          Examples of commands that you may need:
+          - Generate settings.php, memcache prefix and solr index for feature site
+          - Build docker image(s) for testing a feature
+
+          Examples of hooks:
+          - Send SMS when deploy starts
+
+          Option to override or disable built-in commands with appropriate annotation (see BLT doc)
+      </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h3>I am happy with commands, where are the settings? </h3>
+
+            <img src="media/happy.jpg" alt="Happy" />
+
+        </section>
+
+        <section>
+            <h3>Configuration during setup </h3>
+
+            <ul>
+                <li>Template (part of BLT source)</li>
+                <li class="fragment"> => Overrides (part of the project code base)</li>
+                <li class="fragment"> => Local defaults (not part of the code base)</li>
+                <li class="fragment"> => Final result </li>
+            </ul>
+
+            <aside class="notes">
+      <pre>
+          Every step in the chain is performed only if target does not exist.
+      </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h3>Run-time overrides</h3>
+
+            ```
+            blt tests:behat:run -D behat.tags='@mytags'
+            ```
+        </section>
+
+        <section>
+            <h3>Questions?</h3>
+
+            <ul>
+                <li>https://blt.readthedocs.io/en/latest/</li>
+                <li>https://robo.li/</li>
+                <li>https://www.phing.info/</li>
+            </ul>
+        </section>
+
+    </section>
+</div>
+
+<script src="../reveal.js-3.7.0/lib/js/head.min.js"></script>
+<script src="../reveal.js-3.7.0/js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                } },
+            { src: '../plugin/math/math.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                    return !!document.body.classList;
+                } }
+        ]
+    });
+
+    Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
