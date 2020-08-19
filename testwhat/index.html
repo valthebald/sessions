@@ -34,18 +34,200 @@
         <!-- Session title -->
         <section class="title">
             <h2>Why, when and what to test</h2>
-            <h3>Extend and override defaults</h3>
-            <h3><a href="//bit.ly/testwhat">bit.ly/testwhat</a></h3>
+            <h3><a href="//bit.ly/dckyiv-test">bit.ly/dckyiv-test</a></h3>
 
             <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
             <br/>
         </section>
+
         <section>
             <h2>About myself</h2>
             <img src="../media/valthebald.jpg" alt="valthebald" />
             <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
             <a href="https://www.drupal.org/core-mentoring">Core mentoring coordinator</a>  <br/>
             <aside class="notes">I use nick "valthebald" practically in every social network I'm registered</aside>
+        </section>
+
+        <section>
+            <h2>Agenda</h2>
+            <ul>
+                <li>Why do we care about quality</li>
+                <li>What affects the quality</li>
+                <li>Before tests</li>
+                <li>Test types depending on project</li>
+                <li>Quality vs budget</li>
+                <li>Q & A</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Why</h2>
+
+            <ul>
+                <li>Pride</li>
+                <li>Balance quality and budget</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Quality KPI</h2>
+
+            <ul>
+                <li>Mean time to failure</li>
+                <li>Build stability</li>
+                <li>Defect density</li>
+                <li>Customer complains</li>
+                <li>Customer satisfaction</li>
+            </ul>
+
+            <aside class="notes">
+                Mean time to failure - when was the last critical issue?
+                Defect density - number of bugs per line of code (per component/module)
+                Customer complains - PUM (problems per user-month)
+            </aside>
+        </section>
+
+        <section>
+            <h2>Testing the testing</h2>
+
+            <ul>
+                <li>Defect density detected by automated tests</li>
+                <li>Phase based defect removal</li>
+                <li>Defect removal effectiveness</li>
+                <li>Fix backlog - BMI</li>
+                <li>Fix response time</li>
+            </ul>
+
+            <aside class="notes">
+                Phase based: code review, automated tests, manual testing, acceptance, production
+                BMI Backlog management index num_solved/num_opened
+            </aside>
+        </section>
+
+        <section>
+            <h2>Cost of poor quality</h2>
+
+            <ul>
+                <li>Customer support specialist costs</li>
+                <li>Solution costs</li>
+                <li>Brand impact costs</li>
+            </ul>
+
+            <aside class="notes">
+                Good quality comes at cost, but so does poor quality.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Static analysis</h2>
+
+            <ul>
+                <li>Possible bugs</li>
+                <li>Overcomplicated expressions</li>
+                <li>Unused and unreachable code</li>
+            </ul>
+
+            <aside class="notes">
+                Before writing the tests.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Setting up PHPStorm</h2>
+
+            <img src="media/stormqatools.png" alt="Quality tools" />
+
+            <img src="media/stormmdsettings.png" alt="Mess detector" />
+        </section>
+
+        <section>
+            <h2>Test types</h2>
+
+            <ul>
+                <li>Unit</li>
+                <li>Integration</li>
+                <li class="fragment highlight-green">Functional</li>
+                <li>Performance</li>
+                <li>Smoke</li>
+            </ul>
+
+            <aside class="notes">
+                Unit - low level (functions/methods)
+                Integration - different modules together
+                Functional - business requirements (user stories)
+                Performance - non-functional tests under heavy load
+                Smoke - quick tests that basic functionality is working.
+            </aside>
+        </section>
+
+        <section>
+            <h3>What is web application</h3>
+
+            <img src="../behatunit/media/webapp3.png"/>
+
+            <aside class="notes">
+      <pre>Real picture can be more complex, if you add CDN, load balancers.
+      Which brings up the most important question.
+      </pre>
+            </aside>
+        </section>
+
+        <section>
+            <img src="../behatunit/media/whattotest.jpg" alt="What to test?">
+        </section>
+
+        <section>
+            <h2>What is your project?</h2>
+
+            <ul>
+                <li>Core - unit</li>
+                <li>Contrib - unit and integration</li>
+                <li>Client project - functional</li>
+            </ul>
+
+            <aside class="notes">
+                Thanks to extensive number of unit tests in core and popular contrib modules,
+                as builders of Drupal-based solutions we should focus on functional tests,
+                unique for each project.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Functional testing tools</h2>
+
+            <ul>
+                <li>PHPUnit</li>
+                <li>Nightwatch</li>
+                <li>Behat</li>
+                <li>Selenium</li>
+            </ul>
+
+            <aside class="notes">
+                Selenium is different in this line, since it's not a testing tool by itself,
+                but a tool to manage a browser.
+            </aside>
+        </section>
+
+        <section>
+            <h2>Behat scenarios</h2>
+
+            <img src="../behatunit/media/webapp.png">
+
+            <ul>
+                <li>Written in Gherkin - close to natural English</li>
+                <li></li>
+            </ul>
+        </section>
+
+        <section>
+            <ul>
+                <li>https://london2011.drupal.org/sites/default/files/Code%20Smells_0.pdf</li>
+                <li>https://bscdesigner.com/quality-kpis.htm</li>
+                <li>https://bscdesigner.com/complexity-metrics.htm</li>
+                <li>https://diceus.com/top-7-software-quality-metrics-matter/</li>
+                <li>https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing</li>
+                <li>https://docs.behat.org/en/latest/</li>
+            </ul>
         </section>
 
     </section>
