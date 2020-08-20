@@ -160,6 +160,38 @@
             </aside>
         </section>
 
+
+        <section>
+            <h3>What is web application</h3>
+
+            <img src="../behatunit/media/webapp.png"/>
+
+            <aside class="notes">
+      <pre>Before going into details of testing, let's understand what we are testing.
+        In its basic form, web application exists in the following context:
+        User agent (browser, mobile application, other application types) sends request to web server
+        for specific resource (page, script, media file).
+        Web server either serves request directly (i.e. static files from the file system, cacheable pages
+        from web server cache), or bypasses request to application.
+        Application uses internal logic to build the response, which travels back to user agent through web server
+      </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h3>What is web application</h3>
+
+            <img src="../behatunit/media/webapp2.png"/>
+
+            <aside class="notes">
+      <pre>Most non-trivial applications use some kind of database to store data.
+        When it takes significant resources to build response or its certain parts on every request,
+        it makes sense that application caches responses (or parts of it).
+        It also becomes more and more common that application uses external resources.
+      </pre>
+            </aside>
+        </section>
+
         <section>
             <h3>What is web application</h3>
 
@@ -174,6 +206,21 @@
 
         <section>
             <img src="../behatunit/media/whattotest.jpg" alt="What to test?">
+        </section>
+
+        <section>
+            <h2>You test what you are responsible for</h2>
+
+            <ul>
+                <li>(Optionally) load balancer</li>
+                <li>Web server</li>
+                <li class="fragment grow highlight-green">Application</li>
+                <li>External connectors (DB, search servers, web services etc.)</li>
+            </ul>
+
+            <aside class="notes">
+                <pre>The whole picture is too complex. Let's try to focus on what is under our control.</pre>
+            </aside>
         </section>
 
         <section>
@@ -193,6 +240,28 @@
         </section>
 
         <section>
+            <h2>Application in detail</h2>
+
+            <div style="background-color: white"><img src="../behatunit/media/stats.png"></div>
+
+            <aside class="notes">
+      <pre>
+        Let's take a closer look at a typical Drupal application.
+        Combined, the data that it specific for the project (custom code, theme + configuration)
+        are less than 2% of the project.
+        But... the client does not care what part of the project is written by you.
+        You need to ensure that:
+        - your custom code behaves well
+        - your custom theme displays everything well
+        - used modules are configured, do not conflict one with another and the core
+        By this simple chart you can see that integration checks are much more important than
+        correct functioning of each subsystem (also, do not forget that core has very good test coverage)
+      </pre>
+            </aside>
+        </section>
+
+
+        <section>
             <h2>Functional testing tools</h2>
 
             <ul>
@@ -208,16 +277,189 @@
             </aside>
         </section>
 
+
+        <section>
+            <h2>What the client cares about?</h2>
+
+            <ul>
+                <li class="fragment">Overall performance</li>
+                <li class="fragment">End user experience</li>
+                <li class="fragment">Site builder experience</li>
+            </ul>
+
+            <aside class="notes">
+      <pre>Nothing in this list implies any knowledge about application structure.
+      No matter what issue tracking software we use (JIRA, Redmine, Github, Gitlab),
+        issue is an atom of client requirements.
+      </pre>
+            </aside>
+        </section>
+
         <section>
             <h2>Behat scenarios</h2>
 
-            <img src="../behatunit/media/webapp.png">
-
             <ul>
                 <li>Written in Gherkin - close to natural English</li>
-                <li></li>
+                <li>Actions are methods of PHP classes</li>
+                <li>Has a wide range of ready, reusable snippets</li>
             </ul>
         </section>
+
+        <section>
+            <h2>Smoke test: administrative permissions</h2>
+
+            <pre>
+      As a site editor
+      I can use administrative pages.
+
+      As anonymous user or user without site editing permissions
+      I get access denied when attempting to enter administrative pages.
+    </pre>
+
+            <pre>
+      Behat solution:
+      1. Go to /admin as anonymous user
+      2. Check that application returns 'access denied'
+      3. Login as site editor
+      4. Check that application returns administration page
+    </pre>
+
+            <aside class="notes">
+                <pre>You should never, ever have regressions in this check, right?</pre>
+            </aside>
+        </section>
+
+        <section>
+            <h2>Behat feature</h2>
+
+            <pre>
+@javascript
+Feature: Check that administrator has access to the content list
+Scenario:
+      Given that I am a user with administrator role
+      And I visit page /admin/content
+      Then I should see `Next page` link
+    </pre>
+
+
+            <pre>
+      Given that I am user with anonymous role
+      And I visit page /admin/content
+      Then I should see `Access denied`
+    </pre>
+
+      <aside class="notes">These are 2 features that perform the smoke test</aside>
+        </section>
+
+
+        <section>
+            <h2>Client issue: new feature</h2>
+            <pre>
+      As a site editor or site administrator.
+      When I create a new node, I can use WYSIWYG editor for body field.
+      I can switch WYSIWYG on and off.
+    </pre>
+
+            <pre class="fragment">
+      Behat solution:
+      1. Login is site editor
+      2. Go to /node/add/page
+      3. Check that page contains WYSIWYG editor
+    </pre>
+        </section>
+
+        <section>
+            <h2>Behat feature</h2>
+            <pre class="fragment">
+      Given that I am a user with administrator role
+      And I visit page /node/add/page
+      Then I should see 'View Source' button
+      And I click on 'View Source' button
+      Then I should see 'View Text' button
+      And I should not see 'View Source' button
+    </pre>
+        </section>
+
+
+        <section>
+            <h2>Client issue: bug</h2>
+            <pre>
+      News page is empty
+    </pre>
+
+            <pre class="fragment">
+      Behat solution:
+      1. Go to /news as anonymous user
+      2. Check that there are news.
+    </pre>
+
+            <aside class="notes"><pre>
+      Developer performs investigation, and finds that the problem is caused by the version of jQuery used
+      by WYSIWYG. News are loaded with AJAX, so developer decides to downgrade jQuery.
+      Regression! WYSIWYG stopped working!
+    </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h2>Client issue: bug</h2>
+            <pre>
+      News page is empty again!
+    </pre>
+
+            <aside class="notes"><pre>
+      There were no change in jQuery, but news stopped working.
+      Another developer has modified web service that exposes news, to match the future launch of mobile apps.
+      News page takes news from the same service, AJAX feed now returns rows of different structure.
+    </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h2>Lessons learned?</h2>
+
+            <img src="../behatunit/media/plusminus.jpeg" alt="plus and minus"/>
+
+            <aside class="notes"><pre>
+      + We see that there is an issue! Awesome! Breaking change in seemingly unrelated functionality
+      of the site was not rolled out.
+      - It took time to find the source of the problem.
+      - Relation between news page and news web service was not obvious
+      We don't know the application design, and this was the source of the problem.
+    </pre>
+            </aside>
+        </section>
+
+        <section>
+            <h2>How things work</h2>
+            <ul>
+                <li>FeatureContext class(-es)</li>
+                <li>behat.yml</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>
+                <pre>
+class FeatureContext {
+                    ...
+    /**
+     * Push a Submit, Delete, Run etc. button.
+     *
+     * @Given I push the :button button
+     * @param $button
+     */
+    public function iPushTheButton($button) {
+
+        $buttons = array(
+            'Submit' => 'edit-submit',
+            'Delete' => 'edit-delete',
+
+                </pre>
+            </h2>
+        </section>
+
+
 
         <section>
             <ul>
