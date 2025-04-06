@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>BDD and Behat. What, why, and how?</title>
+
+    <meta name="author" content="Valery 'valthebald' Lourie"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="../css/reveal.min.css">
+    <link rel="stylesheet" href="../css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../lib/css/zenburn.css">
+    <link rel="stylesheet" href="../css/highlight-default.min.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="../css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <script src="../js/highlight.min.js"></script>
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<section class="slides">
+<section>
+    <h2>BDD and Behat. What, why, and how?</h2>
+    <h3><a href="//bit.ly/leuven2025ddd">bit.ly/leuven2025ddd</a></h3>
+
+    <p>Slides are hosted on github, press 's' if you want to read speaker notes too.</p>
+  <br/>
+  <aside class="notes">
+    <p>
+      Slides are hosted on github, press 's' if you want to read speaker notes too.
+    </p>
+  </aside>
+</section>
+
+  <section>
+    <h2>About myself</h2>
+    <h3><a href="https://www.drupal.org/u/valthebald">Valery "valthebald" Lourie</a></h3>
+
+    <a href="https://www.drupal.org/core-mentoring">Core mentoring coordinator</a>  <br/>
+    
+  </section>
+
+  <section>
+    <h2>Agenda</h2>
+
+    <ul>
+      <li class="fragment">What is BDD?</li>
+      <li class="fragment">Why BDD matters</li>
+      <li class="fragment">Behat implementation</li>
+      <li class="fragment">Practical examples</li>
+    </ul>
+    <aside class="notes"><pre>In this session we'll explore Behavior-Driven Development (BDD) and how Behat implements it for PHP projects. We'll cover both theoretical and practical aspects.</pre></aside>
+  </section>
+
+  <section>
+    <h2>What is BDD?</h2>
+    
+    <ul>
+      <li class="fragment">Behavior-Driven Development</li>
+      <li class="fragment">Extension of Test-Driven Development (TDD)</li>
+      <li class="fragment">Focus on business value and user behavior</li>
+      <li class="fragment">Uses ubiquitous language that everyone understands</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>BDD Key Concepts</h2>
+    
+    <ul>
+      <li class="fragment">Scenarios described in Gherkin syntax</li>
+      <li class="fragment">Given-When-Then structure</li>
+      <li class="fragment">Collaborative approach between business and technical teams</li>
+      <li class="fragment">Living documentation</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Why BDD Matters</h2>
+    
+    <ul>
+      <li class="fragment">Bridges communication gap between stakeholders</li>
+      <li class="fragment">Creates a shared understanding of requirements</li>
+      <li class="fragment">Tests become documentation</li>
+      <li class="fragment">Focuses development on business value</li>
+      <li class="fragment">Reduces misunderstandings and rework</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Introducing Behat</h2>
+    
+    <ul>
+      <li class="fragment">PHP framework for BDD</li>
+      <li class="fragment">Uses Gherkin syntax</li>
+      <li class="fragment">Integration with Mink for web testing</li>
+      <li class="fragment">Extensible with contexts</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Gherkin Example</h2>
+    
+<pre><code class="language-gherkin">
+Feature: User authentication
+  In order to protect accounts
+  As a website administrator
+  I need to ensure users can login securely
+
+  Scenario: Successful login
+    Given I am on the login page
+    When I fill in "username" with "admin"
+    And I fill in "password" with "password"
+    And I press "Log in"
+    Then I should see "Welcome back"
+</code></pre>
+  </section>
+
+  <section>
+    <h2>Setting Up Behat</h2>
+    
+<pre><code class="language-bash">
+# Install Behat
+composer require --dev behat/behat
+
+# Initialize Behat
+vendor/bin/behat --init
+
+# Install Mink and extensions
+composer require --dev behat/mink-extension
+composer require --dev behat/mink-goutte-driver
+composer require --dev behat/mink-selenium2-driver
+</code></pre>
+  </section>
+
+  <section>
+    <h2>Behat Configuration</h2>
+    
+<pre><code class="language-yaml">
+# behat.yml
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2: ~
+      base_url: http://example.com
+    Drupal\DrupalExtension:
+      blackbox: ~
+</code></pre>
+  </section>
+
+  <section>
+    <h2>Creating Contexts</h2>
+    
+<pre><code class="language-php">
+<?php
+use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ExpectationException;
+
+class FeatureContext implements Context
+{
+    /**
+     * @Then I should see the heading :heading
+     */
+    public function iShouldSeeTheHeading($heading) {
+        $page = $this->getSession()->getPage();
+        $found = $page->findAll('css', 'h1, h2, h3, h4, h5, h6');
+        
+        foreach ($found as $element) {
+            if ($element->getText() === $heading) {
+                return;
+            }
+        }
+        
+        throw new ExpectationException(
+            "The heading '$heading' was not found",
+            $this->getSession()->getDriver()
+        );
+    }
+}
+</code></pre>
+  </section>
+
+  <section>
+    <h2>BDD Workflow</h2>
+    
+    <ol>
+      <li class="fragment">Write feature description and scenarios</li>
+      <li class="fragment">Run Behat to generate step definitions</li>
+      <li class="fragment">Implement step definitions</li>
+      <li class="fragment">Run tests (they should fail initially)</li>
+      <li class="fragment">Implement functionality to make tests pass</li>
+      <li class="fragment">Refactor and repeat</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Drupal-specific Testing</h2>
+    
+<pre><code class="language-gherkin">
+Feature: Content management
+  As a content editor
+  I need to be able to create and edit content
+  So that I can manage the website effectively
+
+  Scenario: Create an article
+    Given I am logged in as a user with the "editor" role
+    When I go to "node/add/article"
+    And I fill in "Title" with "Test Article"
+    And I fill in "Body" with "This is a test article"
+    And I press "Save"
+    Then I should see "Article Test Article has been created"
+</code></pre>
+  </section>
+
+  <section>
+    <h2>Advanced Behat Techniques</h2>
+    
+    <ul>
+      <li class="fragment">Scenario Outlines for data-driven tests</li>
+      <li class="fragment">Tagging scenarios (@javascript, @api)</li>
+      <li class="fragment">Background steps for common prerequisites</li>
+      <li class="fragment">Custom step definitions for complex actions</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common Challenges</h2>
+    
+    <ul>
+      <li class="fragment">JavaScript-heavy applications</li>
+      <li class="fragment">Test isolation and cleanup</li>
+      <li class="fragment">Test data management</li>
+      <li class="fragment">Flaky tests due to timing issues</li>
+      <li class="fragment">Maintaining fixtures and environments</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices</h2>
+    
+    <ul>
+      <li class="fragment">Write scenarios from user perspective</li>
+      <li class="fragment">Keep scenarios focused and concise</li>
+      <li class="fragment">Use domain-specific language</li>
+      <li class="fragment">Ensure test isolation</li>
+      <li class="fragment">Integrate with CI/CD pipeline</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>BDD vs. Other Testing Approaches</h2>
+    
+    <table>
+      <tr><th>Parameter</th><th>BDD (Behat)</th><th>Unit Testing (PHPUnit)</th></tr>
+      <tr class="fragment">
+        <td>Focus</td>
+        <td>User behavior</td>
+        <td>Code correctness</td>
+      </tr>
+      <tr class="fragment">
+        <td>Audience</td>
+        <td>Technical and non-technical</td>
+        <td>Developers</td>
+      </tr>
+      <tr class="fragment">
+        <td>Execution speed</td>
+        <td>Slower</td>
+        <td>Faster</td>
+      </tr>
+      <tr class="fragment">
+        <td>Test scope</td>
+        <td>End-to-end</td>
+        <td>Individual components</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Resources</h2>
+    
+    <ul>
+      <li><a href="https://docs.behat.org">Behat Documentation</a></li>
+      <li><a href="https://github.com/Behat/Mink">Mink</a></li>
+      <li><a href="https://www.drupal.org/project/drupal_extension">Drupal Extension for Behat</a></li>
+      <li><a href="https://cucumber.io/docs/gherkin/">Gherkin Reference</a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Questions?</h3>
+  </section>
+
+</section>
+</div>
+
+<script src="../lib/js/head.min.js"></script>
+<script src="../js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: '../lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: '../plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: '../plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: '../plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: '../plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+  Reveal.addEventListener('fragmentshown');
+</script>
+</body>
+</html>
