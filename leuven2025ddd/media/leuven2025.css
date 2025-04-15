@@ -23,7 +23,8 @@ header {
   margin-top: var(--leuven-spacing-big);
   display: flex;
   h1 {
-    text-align: center;
+    margin-left: 30%;
+    margin-top: var(--leuven-spacing-big);
   }
   img {
     max-height: 100px;
@@ -42,11 +43,12 @@ header {
 
   .reveal .slides {
     text-align: left;
+    top: 350px;
   }
 
   .reveal .slides > section,
   .reveal .slides > section > section {
-    line-height: 1.3;
+    line-height: 1;
     font-weight: inherit;
   }
 
