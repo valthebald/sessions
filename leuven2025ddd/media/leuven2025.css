@@ -1,0 +1,223 @@
+/**
+ * Drupal Developer Days Leuven 2025 theme for reveal.js
+ */
+
+:root {
+  --drupal-blue: #0678be;
+  --drupal-dark-blue: #0c76a7;
+  --drupal-light-blue: #53b0eb;
+  --drupal-lightest-blue: #d2e9f7;
+  --white: #ffffff;
+  --off-white: #f5f5f5;
+  --light-gray: #e0e0e0;
+  --dark-gray: #333333;
+  --drupal-accent: #ff8700;
+}
+
+.reveal {
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 38px;
+  font-weight: normal;
+  color: var(--dark-gray);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides > section,
+.reveal .slides > section > section {
+  line-height: 1.3;
+  font-weight: inherit;
+}
+
+/* HEADINGS */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: 0 0 20px 0;
+  color: var(--drupal-blue);
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-shadow: none;
+  word-wrap: break-word;
+}
+
+.reveal h1 {
+  font-size: 2.2em;
+}
+
+.reveal h2 {
+  font-size: 1.6em;
+}
+
+.reveal h3 {
+  font-size: 1.3em;
+}
+
+.reveal h4 {
+  font-size: 1em;
+}
+
+/* LINKS */
+.reveal a {
+  color: var(--drupal-blue);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.reveal a:hover {
+  color: var(--drupal-accent);
+  text-shadow: none;
+  border: none;
+}
+
+/* BACKGROUND */
+body {
+  background: var(--off-white);
+  background-color: var(--off-white);
+}
+
+.reveal {
+  background: var(--off-white);
+}
+
+/* SLIDES */
+.reveal .slides > section,
+.reveal .slides > section > section {
+  background-color: var(--white);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* LISTS */
+.reveal ul, 
+.reveal ol {
+  margin: 0 0 0 1em;
+}
+
+.reveal ul li, 
+.reveal ol li {
+  margin-bottom: 0.5em;
+}
+
+/* CODE */
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.8em;
+  font-family: monospace;
+  line-height: 1.3em;
+  word-wrap: break-word;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.reveal code {
+  font-family: monospace;
+  background: var(--light-gray);
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 15px;
+  overflow: auto;
+  max-height: 500px;
+  word-wrap: normal;
+  background: var(--dark-gray);
+  color: var(--light-gray);
+  border-radius: 5px;
+}
+
+/* PROGRESS BAR */
+.reveal .progress {
+  height: 10px;
+}
+
+.reveal .progress span {
+  background: var(--drupal-blue);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+/* TABLES */
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal table th {
+  font-weight: bold;
+  background: var(--drupal-blue);
+  color: var(--white);
+}
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+/* FIRST SLIDE */
+.reveal section:first-child {
+  background: linear-gradient(to bottom right, var(--drupal-blue), var(--drupal-dark-blue));
+  color: var(--white);
+}
+
+.reveal section:first-child h2,
+.reveal section:first-child h3,
+.reveal section:first-child a {
+  color: var(--white);
+}
+
+/* FRAGMENT HIGHLIGHTING */
+.reveal .fragment.highlight-blue {
+  opacity: 1;
+  visibility: inherit;
+}
+
+.reveal .fragment.highlight-blue.visible {
+  color: var(--drupal-blue);
+}
+
+/* DRUPAL LOGO WATERMARK */
+.reveal::after {
+  content: "";
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%230678be" d="M50,0C22.4,0,0,22.4,0,50s22.4,50,50,50s50-22.4,50-50S77.6,0,50,0z M74.9,66.8c-3.3,3.3-7.1,5.9-11.4,7.7c-4.3,1.8-8.9,2.7-13.5,2.7c-4.6,0-9.2-0.9-13.5-2.7c-4.3-1.8-8.1-4.4-11.4-7.7c-3.3-3.3-5.9-7.1-7.7-11.4c-1.8-4.3-2.7-8.9-2.7-13.5c0-4.6,0.9-9.2,2.7-13.5c1.8-4.3,4.4-8.1,7.7-11.4c3.3-3.3,7.1-5.9,11.4-7.7c4.3-1.8,8.9-2.7,13.5-2.7c4.6,0,9.2,0.9,13.5,2.7c4.3,1.8,8.1,4.4,11.4,7.7c3.3,3.3,5.9,7.1,7.7,11.4c1.8,4.3,2.7,8.9,2.7,13.5c0,4.6-0.9,9.2-2.7,13.5C80.8,59.7,78.2,63.6,74.9,66.8z"/><path fill="%230678be" d="M61.2,38.8c-3-2.5-6.9-3.8-11.2-3.8c-4.3,0-8.1,1.2-11.2,3.8c-3,2.5-4.6,5.7-4.6,9.5c0,1.9,0.5,3.6,1.4,5.2c0.9,1.6,2.2,2.9,3.7,3.8c1.5,1,3.3,1.6,5.2,1.9c1.9,0.3,3.8,0.1,5.4-0.6c1.6-0.7,2.9-1.8,3.9-3.4c1-1.6,1.5-3.5,1.5-5.5c0-2.1-0.5-3.9-1.5-5.5c-1-1.6-2.3-2.7-3.9-3.4c-1.6-0.7-3.5-0.9-5.4-0.6c-1.9,0.3-3.6,1.1-5.1,2.4c-1.5,1.3-2.6,3-3.2,5c-0.6,2-0.6,4.1,0,6.2s1.7,3.9,3.2,5.4c1.5,1.5,3.3,2.5,5.4,3c2.1,0.5,4.2,0.5,6.2,0c2-0.6,3.7-1.7,5-3.4c1.3-1.7,2-3.9,2-6.4C65.7,44.3,64.2,41.2,61.2,38.8z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  z-index: 1000;
+}
+
+/* NOTES */
+.reveal aside.notes {
+  display: none;
+}
+
+/* CONTROLS */
+.reveal .controls {
+  color: var(--drupal-blue);
+}
+
+/* PRINT */
+@media print {
+  .reveal {
+    background: #fff;
+  }
+}
