@@ -18,16 +18,24 @@
   --leuven-spacing-big: 20px;
 }
 
-header {
-  margin-left: var(--leuven-spacing-big);
-  margin-top: var(--leuven-spacing-big);
+header.header {
   display: flex;
-  h1 {
-    margin-left: 30%;
-    margin-top: var(--leuven-spacing-big);
+  align-items: center; /* Vertically align items in the center */
+  padding: var(--leuven-spacing-big);
+  h1.page-title {
+    flex-grow: 1;
+    margin: 0;
+  }
+  .logo-left {
+    margin-right: auto;
+    width: 150px;
+  }
+  .logo-right {
+    margin-left: auto;
   }
   img {
     max-height: 100px;
+    width: auto;
   }
 }
 
